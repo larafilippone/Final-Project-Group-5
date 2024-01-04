@@ -20,10 +20,9 @@ headers = {
 
 URLS = [
  "https://www.amazon.com/product-reviews/B000063XH7/ref=cm_cr_arp_d_viewopt_srt?ie=UTF8&filterByStar=all_stars&reviewerType=all_reviews&pageNumber=1&sortBy=recent#reviews-filter-bar"
- #"https://www.amazon.com/Heat-Storm-HS-1500-PHX-WIFI-Infrared-Heater/product-reviews/B07JXRWJ8D/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews",
- #"https://www.amazon.com/Heat-Storm-HS-1500-PHX-WIFI-Infrared-Heater/product-reviews/B07JXRWJ8D/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=2",
- #"https://www.amazon.com/Heat-Storm-HS-1500-PHX-WIFI-Infrared-Heater/product-reviews/B07JXRWJ8D/ref=cm_cr_getr_d_paging_btm_next_3?ie=UTF8&reviewerType=all_reviews&pageNumber=3"
-]
+ "https://www.amazon.com/product-reviews/B000063XH7/ref=cm_cr_getr_d_paging_btm_next_2?ie=UTF8&filterByStar=all_stars&reviewerType=all_reviews&pageNumber=2&sortBy=recent#reviews-filter-bar",
+ "https://www.amazon.com/product-reviews/B000063XH7/ref=cm_cr_getr_d_paging_btm_next_3?ie=UTF8&filterByStar=all_stars&reviewerType=all_reviews&pageNumber=3&sortBy=recent#reviews-filter-bar",
+ ]
 
 
 def get_page_html(page_url: str) -> str:
@@ -77,7 +76,7 @@ def orchestrate_data_gathering(single_review: BeautifulSoup) -> dict:
         "review_date": get_review_date(single_review),
         "review_title": get_review_header(single_review),
         "review_stars": get_number_stars(single_review),
-        "review_flavor": get_product_name(single_review),
+        "review_specifics": get_product_name(single_review),
     }
 
 
@@ -97,5 +96,5 @@ out = pd.DataFrame.from_records(all_results)
 logging.info(f"{out.shape[0]} is the shape of the dataframe")
 save_name = f"{datetime.now().strftime('%Y-%m-%d-%m')}.csv"
 logging.info(f"saving to {save_name}")
-out.to_csv(save_name)
-logging.info('Done')
+#out.to_csv(save_name, sep=";", encoding='utf-8-sig')
+#logging.info('Done')
