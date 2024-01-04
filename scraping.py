@@ -3,6 +3,8 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from datetime import datetime
 import logging
+from textblob import TextBlob
+
 
 headers = {
     "authority": "www.amazon.com",
@@ -70,13 +72,22 @@ def get_product_name(soup_object: BeautifulSoup) -> str:
     return product.strip()
 
 
+def analyze_sentiment_with_textblob(text):
+    testimonial = TextBlob(text)
+    return testimonial.sentiment
+
 def orchestrate_data_gathering(single_review: BeautifulSoup) -> dict:
+    review_text = get_review_text(single_review)
+    textblob_sentiment = analyze_sentiment_with_textblob(review_text)
+
     return {
-        "review_text": get_review_text(single_review),
+        "review_text": review_text,
         "review_date": get_review_date(single_review),
         "review_title": get_review_header(single_review),
         "review_stars": get_number_stars(single_review),
         "review_specifics": get_product_name(single_review),
+        "textblob_polarity": textblob_sentiment.polarity,
+        "textblob_subjectivity": textblob_sentiment.subjectivity
     }
 
 
@@ -98,3 +109,4 @@ save_name = f"{datetime.now().strftime('%Y-%m-%d-%m')}.csv"
 logging.info(f"saving to {save_name}")
 #out.to_csv(save_name, sep=";", encoding='utf-8-sig')
 #logging.info('Done')
+print(out.head())
