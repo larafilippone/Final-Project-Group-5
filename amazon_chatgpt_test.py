@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from openai import ChatCompletion
-import openai
+
 
 def get_amazon_products(keyword, brand, num_pages=3):
     product_names = []
@@ -35,33 +34,34 @@ def get_amazon_products(keyword, brand, num_pages=3):
 
 # Generate a list of a keyword or brand - create a UI to enter this keywords and generate a nice graphical representation etc.
 keyword = 'bosch'
-brand = 'Bosch'
+brand = 'BOSCH'
 num_pages = 3  # How to scrape all?
 
 product_names = get_amazon_products(keyword, brand, num_pages)
 
 if product_names:
-    print("List of Bosch products on Amazon:")
+    print("List of products on Amazon:")
     for i, name in enumerate(product_names, start=1):
         print(f"{i}. {name}")
 else:
     print("No product names retrieved.")
 
 # CHAT GPT
-api_key = "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"
-openai.api_key = api_key
+
+import openai
 
 def generate_summary(product_names):
-    prompt = f"Summarize the list of Bosch products on Amazon:\n{', '.join(product_names)}"
+    api_key = "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"
+    openai.api_key = api_key
+
+    prompt = f"Summarize the list of product names:\n{', '.join(product_names)}"
     response = openai.Completion.create(
-        engine="davinci-codex",  # You can use a different engine based on your requirements
+        engine="text-davinci-003",
         prompt=prompt,
         max_tokens=150
     )
 
     return response['choices'][0]['text']
 
-# Example usage
 summary = generate_summary(product_names)
-print("Generated Summary:")
-print(summary)
+print(f"Generated Summary: {summary}")
