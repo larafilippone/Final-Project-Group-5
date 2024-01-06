@@ -11,18 +11,28 @@ def run_scraping():
 
     text_area.insert(tk.INSERT, f"Scraping reviews for product ID: {product_id}...\n")
 
-    # Modify the URL list based on the entered product ID
+    # Generate URLs for pages 1 to 10
     urls = [
-        f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_viewopt_srt?ie=UTF8&filterByStar=all_stars&reviewerType=all_reviews&pageNumber=1&sortBy=recent#reviews-filter-bar",
-        # Add more URLs as needed
+        f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}"
+        for page in range(1, 11)
     ]
 
     # Call the scraping function from scraping.py
     all_results = scrape_amazon_reviews(urls)
 
     # Display the first 5 reviews, for example
-    for review in all_results[:5]: 
-        text_area.insert(tk.INSERT, f"{review}\n")
+    for review in all_results[:5]:  # Adjust the number as needed
+        display_text = (
+            f"Title: {review['review_title']}\n"
+            f"Rating: {review['review_stars']}\n"
+            f"Date: {review['review_date']}\n"
+            f"Product Specifics: {review['review_specifics']}\n"
+            f"Polarity: {review['textblob_polarity']:.2f}, "
+            f"Subjectivity: {review['textblob_subjectivity']:.2f}\n"
+            f"Review: {review['review_text']}\n"
+            "---------------------------------------------\n"
+        )
+        text_area.insert(tk.INSERT, display_text)
 
 def start_scraping_thread():
     scraping_thread = threading.Thread(target=run_scraping)
