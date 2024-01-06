@@ -2,11 +2,12 @@ from scraping import scrape_amazon_reviews
 import tkinter as tk
 from tkinter import scrolledtext, StringVar
 import threading
+from typing import List, Dict, Any
 
 # Initialize all_results as an empty list.
 all_results = []
 
-def run_scraping():
+def run_scraping() -> None:
     """
     Retrieves and displays Amazon product reviews based on the entered product ID. The display includes the review's title,
     rating, date, product specifics, sentiment analysis scores (polarity and subjectivity), and the review text itself.
@@ -48,7 +49,7 @@ def run_scraping():
         )
         text_area.insert(tk.INSERT, display_text)
 
-def apply_filters():
+def apply_filters() -> None:
     """
     Filters and displays reviews based on specified sentiment analysis criteria.
     The filters applied are based on minimum and maximum values for subjectivity and polarity.
@@ -73,7 +74,7 @@ def apply_filters():
     for review in filtered_reviews[:10]:  # Display 10 of the filtered reviews
         display_review(review)
 
-def display_review(review):
+def display_review(review) -> None:
     """
     Displays a single review in the text area of the GUI.
 
@@ -96,7 +97,7 @@ def display_review(review):
     )
     text_area.insert(tk.INSERT, display_text)
 
-def start_scraping_thread():
+def start_scraping_thread() -> None:
     """
     Starts a new thread to run the scraping process with the 'run_scraping' function.
 
