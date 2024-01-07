@@ -112,7 +112,7 @@ def start_scraping_thread() -> None:
 
 # Initialize the main application window using Tkinter
 app = tk.Tk()
-app.title("Amazon Review Scraper")  
+app.title("Amazon Review Analyzer")  
 
 # Create and pack a label widget into the window, prompting for the Amazon product ID
 label = tk.Label(app, text="Enter Amazon Product ID:")
