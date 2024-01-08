@@ -149,28 +149,31 @@ entry.pack()
 scrape_button = tk.Button(app, text="Scrape Reviews", command=start_scraping_thread)
 scrape_button.pack()
 
-# Create and pack entry widgets for filter criteria
-# Create and pack entry widgets for minimum and maximum subjectivity
-min_subjectivity_label = tk.Label(app, text="Min Subjectivity (0 to 1):")
-min_subjectivity_label.pack()
-min_subjectivity_entry = tk.Entry(app)
-min_subjectivity_entry.pack()
+# Frame for the subjectivity filters
+subjectivity_frame = tk.Frame(app)
+min_subjectivity_label = tk.Label(subjectivity_frame, text="Min Subjectivity (0 to 1):")
+min_subjectivity_label.pack(side=tk.LEFT)
+min_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
+min_subjectivity_entry.pack(side=tk.LEFT)
 
-max_subjectivity_label = tk.Label(app, text="Max Subjectivity (0 to 1):")
-max_subjectivity_label.pack()
-max_subjectivity_entry = tk.Entry(app)
-max_subjectivity_entry.pack()
+max_subjectivity_label = tk.Label(subjectivity_frame, text="Max Subjectivity (0 to 1):")
+max_subjectivity_label.pack(side=tk.LEFT)
+max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
+max_subjectivity_entry.pack(side=tk.LEFT)
+subjectivity_frame.pack(pady=(5, 5))  # Add some vertical padding
 
-# Create and pack entry widgets for minimum and maximum polarity
-min_polarity_label = tk.Label(app, text="Min Polarity (-1 to 1):")
-min_polarity_label.pack()
-min_polarity_entry = tk.Entry(app)
-min_polarity_entry.pack()
+# Frame for the polarity filters
+polarity_frame = tk.Frame(app)
+min_polarity_label = tk.Label(polarity_frame, text="Min Polarity (-1 to 1):")
+min_polarity_label.pack(side=tk.LEFT)
+min_polarity_entry = tk.Entry(polarity_frame, width=5)
+min_polarity_entry.pack(side=tk.LEFT)
 
-max_polarity_label = tk.Label(app, text="Max Polarity (-1 to 1):")
-max_polarity_label.pack()
-max_polarity_entry = tk.Entry(app)
-max_polarity_entry.pack()
+max_polarity_label = tk.Label(polarity_frame, text="Max Polarity (-1 to 1):")
+max_polarity_label.pack(side=tk.LEFT)
+max_polarity_entry = tk.Entry(polarity_frame, width=5)
+max_polarity_entry.pack(side=tk.LEFT)
+polarity_frame.pack(pady=(5, 5))  # Add some vertical padding
 
 # Create a button to apply filters
 filter_button = tk.Button(app, text="Apply Filters", command=apply_filters)
