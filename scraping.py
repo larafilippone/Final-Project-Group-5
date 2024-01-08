@@ -121,21 +121,6 @@ def get_number_stars(soup_object: BeautifulSoup) -> str:
     stars = soup_object.find("span", {"class": "a-icon-alt"}).get_text()
     return stars.strip()
 
-def get_product_name(soup_object: BeautifulSoup) -> str:
-    """
-    Extracts the product name from a BeautifulSoup object representing a single review.
-
-    Args:
-    soup_object (BeautifulSoup): a BeautifulSoup object for a single review.
-
-    Returns:
-    str: the name of the product being reviewed.
-    """
-    product = soup_object.find(
-        "a", {"class": "a-size-mini a-link-normal a-color-secondary"}
-    ).get_text()
-    return product.strip()
-
 def analyze_sentiment_with_textblob(text: str):
     """
     Analyzes the sentiment of the given text using TextBlob.
@@ -167,7 +152,6 @@ def orchestrate_data_gathering(single_review: BeautifulSoup) -> dict:
         "review_date": get_review_date(single_review),
         "review_title": get_review_header(single_review),
         "review_stars": get_number_stars(single_review),
-        "review_specifics": get_product_name(single_review),
         "textblob_polarity": textblob_sentiment.polarity,
         "textblob_subjectivity": textblob_sentiment.subjectivity
     }
