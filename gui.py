@@ -1,7 +1,8 @@
 from scraping import scrape_amazon_reviews
 import tkinter as tk
-from tkinter import scrolledtext, StringVar
+from tkinter import scrolledtext
 import threading
+import tkinter.font as tkFont
 
 # Initialize all_results as an empty list.
 all_results = []
@@ -104,7 +105,7 @@ def display_review(review) -> None:
 
     Arguments:
     review (dict): a dictionary containing details of a single review including title,
-                   rating, date, product specifics, polarity, subjectivity, and review text.
+                   rating, date, polarity, subjectivity, and review text.
 
     Returns:
     None: this function does not return any value but updates the GUI directly.
@@ -162,6 +163,18 @@ max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
 max_subjectivity_entry.pack(side=tk.LEFT)
 subjectivity_frame.pack(pady=(5, 5))  # Add some vertical padding
 
+# Define a smaller font for explanations
+explanation_font = tkFont.Font(size=9)
+
+# Subjectivity explanation 
+subjectivity_explanation_text = (
+    "The subjectivity score measures how subjective or opinionated\n"
+    "the review is, and ranges from 0 (completely objective) to 1\n"
+    "(completely subjective)."
+)
+subjectivity_explanation = tk.Label(app, text=subjectivity_explanation_text, font=explanation_font)
+subjectivity_explanation.pack()
+
 # Frame for the polarity filters
 polarity_frame = tk.Frame(app)
 min_polarity_label = tk.Label(polarity_frame, text="Min Polarity (-1 to 1):")
@@ -174,6 +187,15 @@ max_polarity_label.pack(side=tk.LEFT)
 max_polarity_entry = tk.Entry(polarity_frame, width=5)
 max_polarity_entry.pack(side=tk.LEFT)
 polarity_frame.pack(pady=(5, 5))  # Add some vertical padding
+
+# Polarity explanation
+polarity_explanation_text = (
+    "The polarity score measures how negative or positive the sentiment\n"
+    "of the review is, and ranges from -1 (extremely negative) to 1\n"
+    "(extremely positive)."
+)
+polarity_explanation = tk.Label(app, text=polarity_explanation_text, font=explanation_font)
+polarity_explanation.pack()
 
 # Create a button to apply filters
 filter_button = tk.Button(app, text="Apply Filters", command=apply_filters)
