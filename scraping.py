@@ -42,7 +42,7 @@ def get_page_html(page_url: str) -> str:
     return resp.text
 
 
-def get_reviews_from_html(page_html: str) -> BeautifulSoup:
+def get_reviews_from_html(page_html: str) -> list:
     """
     Parses HTML content and extracts review elements.
 
@@ -50,10 +50,17 @@ def get_reviews_from_html(page_html: str) -> BeautifulSoup:
     page_html (str): HTML content of a product review page.
 
     Returns:
-    BeautifulSoup: a collection of review elements.
+    list: a collection of review elements.
     """
     soup = BeautifulSoup(page_html, "lxml")
-    reviews = soup.find_all("div", {"class": "a-section celwidget"})
+
+    # Try the first class
+    reviews = soup.find_all("div", class_="a-section celwidget")
+    
+    # If no reviews are found with the first class, try this different class
+    if not reviews:
+        reviews = soup.find_all("div", class_="a-section review aok-relative")
+    
     return reviews
 
 

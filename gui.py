@@ -2,7 +2,6 @@ from scraping import scrape_amazon_reviews
 import tkinter as tk
 from tkinter import scrolledtext, StringVar
 import threading
-from typing import List, Dict, Any
 
 # Initialize all_results as an empty list.
 all_results = []
@@ -35,7 +34,7 @@ def run_scraping() -> None:
     # Call the scraping function from scraping.py
     all_results = scrape_amazon_reviews(urls)
 
-    # Display the first 5 reviews in the GUI
+    # Display the first 10 reviews in the GUI
     for review in all_results[:10]:  
         display_text = (
             f"Title: {review['review_title']}\n"
