@@ -39,8 +39,7 @@ def run_scraping() -> None:
 
     # Generate URLs for pages 1 to 10
     urls = [
-        f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}"
-        for page in range(1, 2)
+        f"https://www.amazon.com/Computer-Science-Distilled-Computational-Problems/product-reviews/{product_id}/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
     ]
 
     # Call the scraping function from scraping.py
