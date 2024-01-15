@@ -3,10 +3,45 @@ import tkinter as tk
 from tkinter import scrolledtext
 import threading
 import tkinter.font as tkFont
+import os
+import pandas as pd
 
 
 # Initialize all_results as an empty list.
 all_results = []
+
+def save_to_csv(data, filename):
+    df = pd.DataFrame(data)
+    df.to_csv(filename, index=False)
+    print(f"Data saved to {filename}")
+
+def load_from_csv(filename):
+    return pd.read_csv(filename)
+
+def check_and_load_or_scrape(product_id):
+    """
+    Checks if data for the given product ID is already saved, loads it if so,
+    otherwise scrapes new data from Amazon.
+
+    Arguments:
+    product_id (str): Amazon product ID.
+
+    Returns:
+    list: a list of dictionaries, each containing data about a review.
+    """
+    filename = f"{product_id}_reviews.csv"
+    if os.path.exists(filename):
+        try:
+            df = pd.read_csv(filename)
+            return df.to_dict(orient='records'), True  # Convert DataFrame to list of dictionaries
+        except Exception as e:
+            print(f"Error loading data: {e}")
+            return [], False
+    else:
+        urls = [f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}" for page in range(1, 11)]
+        scraped_data = scrape_amazon_reviews(urls)
+        save_to_csv(scraped_data, filename)  # Save the scraped data
+        return scraped_data, False
 
 def run_scraping() -> None:
     """
@@ -30,49 +65,22 @@ def run_scraping() -> None:
     product_id = entry.get()
     if not product_id:
         text_area.insert(tk.INSERT, "Please enter a valid product ID.\n")
-        
-        # Re-enable the scrape button
         scrape_button.config(state=tk.NORMAL)
         return
 
     text_area.insert(tk.INSERT, f"Scraping reviews for product ID: {product_id}...\n")
 
-    # Generate URLs for pages 1 to 10
-    urls = [
-        f"https://www.amazon.com/Computer-Science-Distilled-Computational-Problems/product-reviews/{product_id}/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
-    ]
+    # Check if data is already saved and load it, otherwise scrape new data
+    all_results, data_loaded = check_and_load_or_scrape(product_id)
+    if not data_loaded:
+        save_to_csv(all_results, f"{product_id}_reviews.csv")
 
-    # Call the scraping function from scraping.py
-    all_results = scrape_amazon_reviews(urls)
-
-    # Display the first 10 reviews in the GUI
+    # Display the reviews
     for review in all_results[:10]:
         display_review(review)
-    
+
     # Re-enable the scrape button
     scrape_button.config(state=tk.NORMAL)
-
-    # Generate URLs for pages 1 to 10
-    urls = [
-        f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}"
-        for page in range(1, 2)
-    ]
-
-    # Call the scraping function from scraping.py
-    all_results = scrape_amazon_reviews(urls)
-
-    # Display the first 10 reviews in the GUI
-    for review in all_results[:10]:  
-        display_text = (
-            f"Title: {review['review_title']}\n"
-            f"Rating: {review['review_stars']}\n"
-            f"Date: {review['review_date']}\n"
-            f"Polarity: {review['textblob_polarity']:.2f}, "
-            f"Subjectivity: {review['textblob_subjectivity']:.2f}\n"
-            f"Review: {review['review_text']}\n"
-            "---------------------------------------------\n"
-        )
-        text_area.insert(tk.INSERT, display_text)
 
 def apply_filters() -> None:
     """
