@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import logging
 from textblob import TextBlob
+import random
 
 # List of user agents to choose from
 user_agents = [
