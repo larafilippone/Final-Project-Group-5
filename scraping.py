@@ -4,21 +4,14 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import logging
 from textblob import TextBlob
+import random
 
-# Headers used for making HTTP requests to simulate a browser visit
-headers = {
-    "authority": "www.amazon.com",
-    "pragma": "no-cache",
-    "cache-control": "no-cache",
-    "dnt": "1",
-    "upgrade-insecure-requests": "1",
-    "user-agent": "Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36",
-    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "sec-fetch-site": "none",
-    "sec-fetch-mode": "navigate",
-    "sec-fetch-dest": "document",
-    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-}
+# Define different user agents for rotation
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
+]
 
 # URLS list for testing (can be removed if URLs are dynamically generated in the GUI script)
 URLS = [
@@ -31,15 +24,38 @@ URLS = [
 def get_page_html(page_url: str) -> str:
     """
     Makes a request to a given URL and returns the HTML content of the page.
+    Randomly selects a user agent for each request.
 
     Arguments:
     page_url (str): the URL of the page to scrape.
 
     Returns:
-    str: the HTML content of the page.
+    str: the HTML content of the page, or an empty string if an error occurs.
     """
-    resp = requests.get(page_url, headers=headers)
-    return resp.text
+    try:
+        # Choose a random user agent
+        user_agent = random.choice(user_agents)
+        headers = {
+            "authority": "www.amazon.com",
+            "pragma": "no-cache",
+            "cache-control": "no-cache",
+            "dnt": "1",
+            "upgrade-insecure-requests": "1",
+            "user-agent": user_agent,
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "document",
+            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+        }
+
+        response = requests.get(page_url, headers=headers)
+        response.raise_for_status()  # Raises HTTPError for bad responses
+        return response.text
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return ""  # Return empty string in case of an error
 
 
 def get_reviews_from_html(page_html: str) -> list:
