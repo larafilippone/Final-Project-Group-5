@@ -42,17 +42,24 @@ search_params = {
 # Invert the search_params dictionary
 inverted_search_params = {v: k for k, v in search_params.items()}
 
-# Create an empty DataFrame to store the product data 
-
-product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
-
-
-# Function to get Amazon product data
 
 def get_amazon_product_data(keyword, search_param, num_pages=1):
     product_data = {'Product Name': [], 'Product URL': [], 'ASIN': []}
-    
+
+    """
+    Scrapes Amazon search results for a given keyword and search parameter that is specified by the user. 
+
+    Arguments:
+    - keyword (str): The search keyword inserted by the user 
+    - search_param (str): The search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
+    - num_pages (int): The number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
+
+    Returns:
+    - product_data (dict): A dictionary containing scraped product data with keys 'Product Name', 'Product URL', and 'ASIN'.
+    """
+
     # List of user agents to choose from
+
     user_agents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
@@ -67,6 +74,7 @@ def get_amazon_product_data(keyword, search_param, num_pages=1):
     ]
 
     # Randomly choose a user agent
+
     random_user_agent = random.choice(user_agents)
     
     for page in range(1, num_pages + 1):
@@ -107,14 +115,29 @@ def get_amazon_product_data(keyword, search_param, num_pages=1):
 
     return product_data
 
-# Function to update the Treeview and DataFrame
+
 def update_treeview(keyword, search_param, num_pages):
-    global product_df
-    product_data = get_amazon_product_data(keyword, search_param, num_pages)
     
+    """
+    Updates a Tkinter Treeview widget with Amazon product data obtained from the search 
+
+    Arguments:
+    - keyword (str): The search keyword inserted by the user 
+    - search_param (str): The search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
+    - num_pages (int): The number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
+
+    Returns:
+    - None: Creates treeview table and saves results in the csv file "amazon_product_data.csv"
+    """
+    global product_df
+
+    # Create an empty DataFrame to store the product data 
+
+    product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
+
     # Update DataFrame
-    new_data = pd.DataFrame(product_data, columns=["Product Name", "Product URL", "ASIN"])
-    product_df = pd.concat([product_df, new_data], ignore_index=True)
+    product_data = get_amazon_product_data(keyword, search_param, num_pages)
+    product_df = pd.concat([product_df, pd.DataFrame(product_data)], ignore_index=True)
 
     # Clear previous results in Treeview
     for row in products_tree.get_children():
@@ -128,18 +151,29 @@ def update_treeview(keyword, search_param, num_pages):
         # Save DataFrame to CSV
         product_df.to_csv('amazon_product_data.csv', index=False)
 
-# Function to handle Treeview selection event
+
 def on_select(event):
+
+    """
+    On selection of a row of the treeview widget 
+
+    Arguments:
+    - event (Tkinter Event): The event object triggered by the Treeview selection.
+
+    Returns:
+    - None: Prints the selected URL and assigns it to the global variable 'selection_url'.
+    """
+    global selected_id
+
     selected_item = products_tree.selection()[0]
-    selected_url = product_df.loc[selected_item, 'Product URL']
-    print(f"Selected URL: {selected_url}")
-    # Assign the selected URL to the variable
-    global selection_url
-    selection_url = selected_url
+    selected_index = products_tree.index(selected_item)
+    selected_id = product_df.loc[selected_index, 'ASIN']
+    print(f"Selected ASIN: {selected_id}")
+
 
 # Create Tkinter window
 window = tk.Tk()
-window.title("Amazon Product Scraper")
+window.title("Amazon Product Search")
 
 # Create and place widgets
 tk.Label(window, text="Keyword:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
