@@ -234,15 +234,15 @@ app.title("Amazon Review Analyzer")
 
 # Create and pack a label widget into the window, prompting for the Amazon product ID
 label = tk.Label(app, text="Enter Amazon Product ID:")
-label.pack()  
+label.pack(pady=(10, 0))  # Add vertical padding above the label 
 
 # Create and pack an entry widget for user input (to enter the product ID)
 entry = tk.Entry(app)
-entry.pack()  
+entry.pack(pady=5) # Add vertical padding around the entry widget  
 
 # Create a button that, when clicked, will start the scraping process
 scrape_button = tk.Button(app, text="Scrape Reviews", command=start_scraping_thread)
-scrape_button.pack()
+scrape_button.pack(pady=5)  # Add some vertical padding around the button
 
 # Frame for the subjectivity filters
 subjectivity_frame = tk.Frame(app)
@@ -262,12 +262,11 @@ explanation_font = tkFont.Font(size=9)
 
 # Subjectivity explanation 
 subjectivity_explanation_text = (
-    "The subjectivity score measures how subjective or opinionated\n"
-    "the review is, and ranges from 0 (completely objective) to 1\n"
-    "(completely subjective)."
+    "Subjectivity score measures how subjective or opinionated the review is,\n"
+    "and ranges from 0 (completely objective) to 1 (completely subjective)."
 )
-subjectivity_explanation = tk.Label(app, text=subjectivity_explanation_text, font=explanation_font)
-subjectivity_explanation.pack()
+subjectivity_explanation = tk.Label(app, text=subjectivity_explanation_text, font=explanation_font, width = 100)
+subjectivity_explanation.pack(pady=(5, 5))  # Add vertical padding around the explanation
 
 # Frame for the polarity filters
 polarity_frame = tk.Frame(app)
@@ -284,24 +283,23 @@ polarity_frame.pack(pady=(5, 5))  # Add some vertical padding
 
 # Polarity explanation
 polarity_explanation_text = (
-    "The polarity score measures how negative or positive the sentiment\n"
-    "of the review is, and ranges from -1 (extremely negative) to 1\n"
-    "(extremely positive)."
+    "Polarity score measures how negative or positive the sentiment of the review is,\n"
+    "and ranges from -1 (extremely negative) to 1 (extremely positive)."
 )
 polarity_explanation = tk.Label(app, text=polarity_explanation_text, font=explanation_font)
-polarity_explanation.pack()
+polarity_explanation.pack(pady=(5, 10))  # Add vertical padding around the explanation
 
 # Create a button to apply filters
 filter_button = tk.Button(app, text="Apply Filters", command=apply_filters)
-filter_button.pack()
+filter_button.pack(pady=5) # Add some vertical padding around the button
 
 # Create a button to display the wordcloud
 wordcloud_button = tk.Button(app, text="Show Word Cloud", command=display_wordcloud)
-wordcloud_button.pack()
+wordcloud_button.pack(pady=5) # Add some vertical padding around the button
 
 # Create a scrolled text area where the scraped review data will be displayed
 text_area = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=40)
-text_area.pack()
+text_area.pack(pady=10) # Add some vertical padding below the text area
 
 # Start the application's main event loop, ready for user interaction
 app.mainloop()
