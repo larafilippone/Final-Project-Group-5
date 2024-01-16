@@ -13,10 +13,14 @@ import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from typing import List, Dict, Tuple, Any, Optional
 
+# Global variables initialization
+all_results: List[Dict] = []
+product_df = pd.DataFrame()
+product_id: Optional[str] = None
 
 # Dictionary mapping search_param options to corresponding categories on the Amazon website 
-
 search_params = {
     " ": "All",
     "arts-crafts-intl-ship": "Arts & Crafts",
@@ -49,7 +53,7 @@ search_params = {
 }
 
 # Create a function to check if the given product ID is valid
-def is_valid_asin(asin):
+def is_valid_asin(asin: str) -> bool:
     """
     Validates if the given string is a valid ASIN.
 
@@ -57,12 +61,12 @@ def is_valid_asin(asin):
     asin (str): string to be validated as ASIN.
 
     Returns:
-    bool: True if the string is a valid ASIN, False otherwise.
+    bool: true if the string is a valid ASIN, False otherwise.
     """
     return len(asin) == 10 and asin.isalnum()
 
 # Create a function to save scraped data to CSV file
-def save_to_csv(data, filename):
+def save_to_csv(data: List[Dict], filename: str) -> None:
     """
     Saves the scraped review data to a CSV file.
 
@@ -71,12 +75,12 @@ def save_to_csv(data, filename):
     The index of the DataFrame is not included in the CSV file. After saving, a confirmation message is printed.
 
     Arguments:
-    data (list of dict): The scraped review data, where each review is represented as a dictionary.
-    filename (str): The name of the file to which the data will be saved. The file will be saved in the current
+    data (list of dict): the scraped review data, where each review is represented as a dictionary.
+    filename (str): the name of the file to which the data will be saved. The file will be saved in the current
                     working directory unless a different path is specified in the filename.
 
     Returns:
-    None: This function does not return any value but saves data to a CSV file and prints a confirmation message.
+    None: this function does not return any value but saves data to a CSV file and prints a confirmation message.
     """
     df = pd.DataFrame(data)
     df.to_csv(filename, index=False)
@@ -101,7 +105,7 @@ def load_from_csv(filename: str) -> pd.DataFrame:
     return pd.read_csv(filename)
 
 # Create a function to either load data from CSV file or scrape new data
-def check_and_load_or_scrape(product_id):
+def check_and_load_or_scrape(product_id: str) -> Tuple[List[Dict], bool]:
     """
     Checks if data for the given product ID is already saved, loads it if so,
     otherwise scrapes new data from Amazon.
@@ -125,9 +129,6 @@ def check_and_load_or_scrape(product_id):
         scraped_data = scrape_amazon_reviews(urls)
         save_to_csv(scraped_data, filename)  # Save the scraped data
         return scraped_data, False
-
-# Initialize all_results as an empty list
-all_results = []
 
 # Create a function to run the scraping process
 def run_scraping() -> None:
@@ -198,7 +199,7 @@ def apply_filters() -> None:
             display_review(review)
 
 # Create a function to display a single review in the GUI
-def display_review(review) -> None:
+def display_review(review: Dict[str, Any]) -> None:
     """
     Displays a single review in the text area of the GUI.
 
@@ -264,43 +265,7 @@ def start_scraping_thread() -> None:
     scraping_thread = threading.Thread(target=run_scraping)
     scraping_thread.start()
 
-def update_treeview(keyword, search_param, num_pages):
-    
-    """
-    Updates a Tkinter Treeview widget with Amazon product data obtained from the search 
-
-    Arguments:
-    - keyword (str): The search keyword inserted by the user 
-    - search_param (str): The search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
-    - num_pages (int): The number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
-
-    Returns:
-    - None: Creates treeview table and saves results in the csv file "amazon_product_data.csv"
-    """
-    global product_df
-
-    # Create an empty DataFrame to store the product data 
-
-    product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
-
-    # Update DataFrame
-    product_data = get_amazon_product_data(keyword, search_param, num_pages)
-    product_df = pd.concat([product_df, pd.DataFrame(product_data)], ignore_index=True)
-
-    # Clear previous results in Treeview
-    for row in products_tree.get_children():
-        products_tree.delete(row)
-
-    if not product_df.empty:
-        # Insert data into Treeview
-        for i, row in product_df.iterrows():
-            products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["Product URL"], row["ASIN"]))
-
-        # Save DataFrame to CSV
-        product_df.to_csv('amazon_product_data.csv', index=False)
-
-
-def on_select(event):
+def on_select(event: tk.Event) -> None:
 
     """
     On selection of a row of the treeview widget 
@@ -322,6 +287,40 @@ def on_select(event):
 
     print(f"Selected ASIN: {product_id}")
 
+# Create function to update the Treeview widget
+def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
+    """
+    Updates a Tkinter Treeview widget with Amazon product data obtained from the search 
+
+    Arguments:
+    - keyword (str): the search keyword inserted by the user 
+    - search_param (str): the search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
+    - num_pages (int): the number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
+
+    Returns:
+    - None: creates treeview table and saves results in the csv file "amazon_product_data.csv"
+    """
+    global product_df
+
+    # Create an empty DataFrame to store the product data 
+    product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
+
+    # Update DataFrame
+    product_data = get_amazon_product_data(keyword, search_param, num_pages)
+    product_df = pd.concat([product_df, pd.DataFrame(product_data)], ignore_index=True)
+
+    # Clear previous results in Treeview
+    for row in products_tree.get_children():
+        products_tree.delete(row)
+
+    if not product_df.empty:
+        # Insert data into Treeview
+        for i, row in product_df.iterrows():
+            products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["Product URL"], row["ASIN"]))
+
+        # Save DataFrame to CSV
+        product_df.to_csv('amazon_product_data.csv', index=False)
+
 # Initialize the main application window using Tkinter
 app = tk.Tk()
 app.title("Amazon Review Analyzer")  
@@ -331,18 +330,21 @@ tk.Label(app, text="Keyword:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
 tk.Label(app, text="Search Parameter:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
 tk.Label(app, text="Number of Pages:").grid(row=2, column=0, padx=5, pady=5, sticky="e")
 
+# Create an entry to input key words
 keyword_entry = tk.Entry(app)
 keyword_entry.grid(row=0, column=1, padx=5, pady=5)
 
-# Dropdown menu for search_param
+# Create dropdown menu for search_param
 search_param_var = tk.StringVar()
 search_param_dropdown = ttk.Combobox(app, textvariable=search_param_var, values=list(search_params.values()))
 search_param_dropdown.set(list(search_params.values())[0])  # Set default value
 search_param_dropdown.grid(row=1, column=1, padx=5, pady=5)
 
+# Create entry to set the number of pages
 num_pages_entry = tk.Entry(app)
 num_pages_entry.grid(row=2, column=1, padx=5, pady=5)
 
+# Create button to start the search
 search_button = tk.Button(app, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), search_param_var.get(), int(num_pages_entry.get())))
 search_button.grid(row=3, column=0, columnspan=2, pady=10)
 
