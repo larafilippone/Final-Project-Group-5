@@ -5,6 +5,12 @@ import threading
 import tkinter.font as tkFont
 import os
 import pandas as pd
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 # Create a function to check if the given product ID is valid
 def is_valid_asin(asin):
@@ -179,6 +185,35 @@ def display_review(review) -> None:
     )
     text_area.insert(tk.INSERT, display_text)
 
+# Create a function to display a wordcloud in the GUI
+def display_wordcloud() -> None:
+    """
+    Generates and displays a word cloud from the scraped reviews, excluding common stopwords.
+
+    Arguments:
+    None: this function uses global variable all_results.
+
+    Returns:
+    None: this function updates the GUI with the word cloud image.
+    """
+    # NLTK Stop words
+    stop_words = set(stopwords.words('english'))
+
+    # Combine all review texts into a single string
+    text = " ".join(review['review_text'] for review in all_results)
+
+    # Tokenize the text and remove stopwords
+    words = word_tokenize(text)
+    filtered_text = " ".join(word for word in words if word.lower() not in stop_words and word.isalpha())
+
+    # Generate the word cloud image
+    wordcloud = WordCloud(width=800, height=800, background_color='white').generate(filtered_text)
+
+    # Convert to an image and display in Tkinter
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.show()
+
 # Create a function to start a new thread and run the scraping process
 def start_scraping_thread() -> None:
     """
@@ -259,6 +294,10 @@ polarity_explanation.pack()
 # Create a button to apply filters
 filter_button = tk.Button(app, text="Apply Filters", command=apply_filters)
 filter_button.pack()
+
+# Create a button to display the wordcloud
+wordcloud_button = tk.Button(app, text="Show Word Cloud", command=display_wordcloud)
+wordcloud_button.pack()
 
 # Create a scrolled text area where the scraped review data will be displayed
 text_area = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=40)
