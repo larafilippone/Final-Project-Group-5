@@ -316,6 +316,10 @@ def on_select(event):
     selected_item = products_tree.selection()[0]
     selected_index = products_tree.index(selected_item)
     product_id = product_df.loc[selected_index, 'ASIN']
+    
+    # Enable the scrape button when a product is selected
+    scrape_button.config(state=tk.NORMAL)
+
     print(f"Selected ASIN: {product_id}")
 
 # Initialize the main application window using Tkinter
@@ -353,9 +357,8 @@ products_tree.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
 # Bind the on_select function to the Treeview's selection event
 products_tree.bind("<<TreeviewSelect>>", on_select)
 
-
 # Create a button that, when clicked, will start the scraping process
-scrape_button = tk.Button(app, text="Scrape Reviews", command=start_scraping_thread)
+scrape_button = tk.Button(app, text="Scrape Reviews", command=start_scraping_thread, state=tk.DISABLED)
 scrape_button.grid(row=6, column=0, columnspan=2, pady=5)
 
 # Frame for the subjectivity filters
