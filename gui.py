@@ -1,5 +1,7 @@
 from scraping import scrape_amazon_reviews
+from product_search import get_amazon_product_data
 import tkinter as tk
+from tkinter import ttk
 from tkinter import scrolledtext
 import threading
 import tkinter.font as tkFont
@@ -11,6 +13,40 @@ import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+
+
+# Dictionary mapping search_param options to corresponding categories on the Amazon website 
+
+search_params = {
+    " ": "All",
+    "arts-crafts-intl-ship": "Arts & Crafts",
+    "automotive-intl-ship": "Automotive",
+    "baby-products-intl-ship": "Baby",
+    "beauty-intl-ship": "Beauty & Personal Care",
+    "stripbooks-intl-ship": "Books",
+    "fashion-boys-intl-ship": "Boys' Fashion",
+    "computers-intl-ship": "Computers",
+    "deals-intl-ship": "Deals",
+    "digital-music": "Digital Music",
+    "electronics-intl-ship": "Electronics",
+    "fashion-girls-intl-ship": "Girls' Fashion",
+    "hpc-intl-ship": "Health & Household",
+    "kitchen-intl-ship": "Home & Kitchen",
+    "industrial-intl-ship": "Industrial & Scientific",
+    "digital-text": "Kindle Store",
+    "luggage-intl-ship": "Luggage",
+    "fashion-mens-intl-ship": "Men's Fashion",
+    "movies-tv-intl-ship": "Movies & TV",
+    "music-intl-ship": "Movies, CDs & Vinyl",
+    "pets-intl-ship": "Pet Supplies",
+    "instant-video": "Prime Video",
+    "software-intl-ship": "Software",
+    "sporting-intl-ship": "Sports & Outdoors",
+    "tools-intl-ship": "Tools & Home Improvement",
+    "toys-and-games-intl-ship": "Toys & Games",
+    "videogames-intl-ship": "Video Games",
+    "fashion-womens-intl-ship": "Women's Fashion"
+}
 
 # Create a function to check if the given product ID is valid
 def is_valid_asin(asin):
@@ -113,7 +149,6 @@ def run_scraping() -> None:
     # Clear the previous results from the text area
     text_area.delete('1.0', tk.END)
 
-    product_id = entry.get()
     if not product_id or not is_valid_asin(product_id):
         text_area.insert(tk.INSERT, "Please enter a valid product ID.\n")
         scrape_button.config(state=tk.NORMAL)
@@ -225,24 +260,103 @@ def start_scraping_thread() -> None:
     Returns:
     None: this function does not return a value. It starts a new thread for the scraping process.
     """
+
     scraping_thread = threading.Thread(target=run_scraping)
     scraping_thread.start()
+
+def update_treeview(keyword, search_param, num_pages):
+    
+    """
+    Updates a Tkinter Treeview widget with Amazon product data obtained from the search 
+
+    Arguments:
+    - keyword (str): The search keyword inserted by the user 
+    - search_param (str): The search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
+    - num_pages (int): The number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
+
+    Returns:
+    - None: Creates treeview table and saves results in the csv file "amazon_product_data.csv"
+    """
+    global product_df
+
+    # Create an empty DataFrame to store the product data 
+
+    product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
+
+    # Update DataFrame
+    product_data = get_amazon_product_data(keyword, search_param, num_pages)
+    product_df = pd.concat([product_df, pd.DataFrame(product_data)], ignore_index=True)
+
+    # Clear previous results in Treeview
+    for row in products_tree.get_children():
+        products_tree.delete(row)
+
+    if not product_df.empty:
+        # Insert data into Treeview
+        for i, row in product_df.iterrows():
+            products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["Product URL"], row["ASIN"]))
+
+        # Save DataFrame to CSV
+        product_df.to_csv('amazon_product_data.csv', index=False)
+
+
+def on_select(event):
+
+    """
+    On selection of a row of the treeview widget 
+
+    Arguments:
+    - event (Tkinter Event): The event object triggered by the Treeview selection.
+
+    Returns:
+    - None: Prints the selected URL and assigns it to the global variable 'selection_url'.
+    """
+    global product_id
+
+    selected_item = products_tree.selection()[0]
+    selected_index = products_tree.index(selected_item)
+    product_id = product_df.loc[selected_index, 'ASIN']
+    print(f"Selected ASIN: {product_id}")
 
 # Initialize the main application window using Tkinter
 app = tk.Tk()
 app.title("Amazon Review Analyzer")  
 
-# Create and pack a label widget into the window, prompting for the Amazon product ID
-label = tk.Label(app, text="Enter Amazon Product ID:")
-label.pack(pady=(10, 0))  # Add vertical padding above the label 
+# Create and place widgets using grid
+tk.Label(app, text="Keyword:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+tk.Label(app, text="Search Parameter:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
+tk.Label(app, text="Number of Pages:").grid(row=2, column=0, padx=5, pady=5, sticky="e")
 
-# Create and pack an entry widget for user input (to enter the product ID)
-entry = tk.Entry(app)
-entry.pack(pady=5) # Add vertical padding around the entry widget  
+keyword_entry = tk.Entry(app)
+keyword_entry.grid(row=0, column=1, padx=5, pady=5)
+
+# Dropdown menu for search_param
+search_param_var = tk.StringVar()
+search_param_dropdown = ttk.Combobox(app, textvariable=search_param_var, values=list(search_params.values()))
+search_param_dropdown.set(list(search_params.values())[0])  # Set default value
+search_param_dropdown.grid(row=1, column=1, padx=5, pady=5)
+
+num_pages_entry = tk.Entry(app)
+num_pages_entry.grid(row=2, column=1, padx=5, pady=5)
+
+search_button = tk.Button(app, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), search_param_var.get(), int(num_pages_entry.get())))
+search_button.grid(row=3, column=0, columnspan=2, pady=10)
+
+# Treeview for displaying product list
+products_tree = ttk.Treeview(app, columns=("Number", "Product Name", "Product URL", "ASIN"), show="headings")
+products_tree.heading("Number", text="Number")
+products_tree.heading("Product Name", text="Product Name")
+products_tree.heading("Product URL", text="Product URL")
+products_tree.heading("ASIN", text="ASIN")
+products_tree.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+
+# Bind the on_select function to the Treeview's selection event
+products_tree.bind("<<TreeviewSelect>>", on_select)
+
 
 # Create a button that, when clicked, will start the scraping process
 scrape_button = tk.Button(app, text="Scrape Reviews", command=start_scraping_thread)
-scrape_button.pack(pady=5)  # Add some vertical padding around the button
+scrape_button.grid(row=6, column=0, columnspan=2, pady=5)
 
 # Frame for the subjectivity filters
 subjectivity_frame = tk.Frame(app)
@@ -255,7 +369,7 @@ max_subjectivity_label = tk.Label(subjectivity_frame, text="Max Subjectivity (0 
 max_subjectivity_label.pack(side=tk.LEFT)
 max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
 max_subjectivity_entry.pack(side=tk.LEFT)
-subjectivity_frame.pack(pady=(5, 5))  # Add some vertical padding
+subjectivity_frame.grid(row=7, column=0, columnspan=2, pady=(5, 5))
 
 # Define a smaller font for explanations
 explanation_font = tkFont.Font(size=9)
@@ -266,7 +380,7 @@ subjectivity_explanation_text = (
     "and ranges from 0 (completely objective) to 1 (completely subjective)."
 )
 subjectivity_explanation = tk.Label(app, text=subjectivity_explanation_text, font=explanation_font, width = 100)
-subjectivity_explanation.pack(pady=(5, 5))  # Add vertical padding around the explanation
+subjectivity_explanation.grid(row=8, column=0, columnspan=2, pady=(5, 5))
 
 # Frame for the polarity filters
 polarity_frame = tk.Frame(app)
@@ -279,7 +393,7 @@ max_polarity_label = tk.Label(polarity_frame, text="Max Polarity (-1 to 1):")
 max_polarity_label.pack(side=tk.LEFT)
 max_polarity_entry = tk.Entry(polarity_frame, width=5)
 max_polarity_entry.pack(side=tk.LEFT)
-polarity_frame.pack(pady=(5, 5))  # Add some vertical padding
+polarity_frame.grid(row=9, column=0, columnspan=2, pady=(5, 5))
 
 # Polarity explanation
 polarity_explanation_text = (
@@ -287,19 +401,19 @@ polarity_explanation_text = (
     "and ranges from -1 (extremely negative) to 1 (extremely positive)."
 )
 polarity_explanation = tk.Label(app, text=polarity_explanation_text, font=explanation_font)
-polarity_explanation.pack(pady=(5, 10))  # Add vertical padding around the explanation
+polarity_explanation.grid(row=10, column=0, columnspan=2, pady=(5, 10))
 
 # Create a button to apply filters
 filter_button = tk.Button(app, text="Apply Filters", command=apply_filters)
-filter_button.pack(pady=5) # Add some vertical padding around the button
+filter_button.grid(row=11, column=0, columnspan=2, pady=5)
 
-# Create a button to display the wordcloud
+# Create a button to display the word cloud
 wordcloud_button = tk.Button(app, text="Show Word Cloud", command=display_wordcloud)
-wordcloud_button.pack(pady=5) # Add some vertical padding around the button
+wordcloud_button.grid(row=12, column=0, columnspan=2, pady=5)
 
 # Create a scrolled text area where the scraped review data will be displayed
 text_area = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=40)
-text_area.pack(pady=10) # Add some vertical padding below the text area
+text_area.grid(row=13, column=0, columnspan=2, pady=10)
 
 # Start the application's main event loop, ready for user interaction
 app.mainloop()
