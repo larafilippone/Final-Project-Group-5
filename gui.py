@@ -6,18 +6,59 @@ import tkinter.font as tkFont
 import os
 import pandas as pd
 
+# Create a function to check if the given product ID is valid
+def is_valid_asin(asin):
+    """
+    Validates if the given string is a valid ASIN.
 
-# Initialize all_results as an empty list.
-all_results = []
+    Arguments:
+    asin (str): string to be validated as ASIN.
 
+    Returns:
+    bool: True if the string is a valid ASIN, False otherwise.
+    """
+    return len(asin) == 10 and asin.isalnum()
+
+# Create a function to save scraped data to CSV file
 def save_to_csv(data, filename):
+    """
+    Saves the scraped review data to a CSV file.
+
+    This function takes the scraped data, which is a list of dictionaries where each dictionary represents a review,
+    and converts it into a pandas DataFrame. It then saves this DataFrame to a CSV file with the specified filename.
+    The index of the DataFrame is not included in the CSV file. After saving, a confirmation message is printed.
+
+    Arguments:
+    data (list of dict): The scraped review data, where each review is represented as a dictionary.
+    filename (str): The name of the file to which the data will be saved. The file will be saved in the current
+                    working directory unless a different path is specified in the filename.
+
+    Returns:
+    None: This function does not return any value but saves data to a CSV file and prints a confirmation message.
+    """
     df = pd.DataFrame(data)
     df.to_csv(filename, index=False)
     print(f"Data saved to {filename}")
 
-def load_from_csv(filename):
+# Create a function to load data from CSV file into a pandas DataFrame
+def load_from_csv(filename: str) -> pd.DataFrame:
+    """
+    Loads data from a CSV file into a pandas DataFrame.
+
+    This function reads a CSV file specified by the filename and loads its contents into a pandas DataFrame. 
+    It assumes that the CSV file is properly formatted and that the first row contains the header names for the columns. 
+    The function is primarily used to load scraped review data that has been previously saved to a CSV file.
+
+    Arguments:
+    filename (str): the name of the CSV file to be loaded. The file should be in the current working directory 
+                    or include the full path.
+
+    Returns:
+    pd.DataFrame: a pandas DataFrame containing the data loaded from the CSV file.
+    """
     return pd.read_csv(filename)
 
+# Create a function to either load data from CSV file or scrape new data
 def check_and_load_or_scrape(product_id):
     """
     Checks if data for the given product ID is already saved, loads it if so,
@@ -43,6 +84,10 @@ def check_and_load_or_scrape(product_id):
         save_to_csv(scraped_data, filename)  # Save the scraped data
         return scraped_data, False
 
+# Initialize all_results as an empty list
+all_results = []
+
+# Create a function to run the scraping process
 def run_scraping() -> None:
     """
     Retrieves and displays Amazon product reviews based on the entered product ID. The display includes the review's title,
@@ -63,7 +108,7 @@ def run_scraping() -> None:
     text_area.delete('1.0', tk.END)
 
     product_id = entry.get()
-    if not product_id:
+    if not product_id or not is_valid_asin(product_id):
         text_area.insert(tk.INSERT, "Please enter a valid product ID.\n")
         scrape_button.config(state=tk.NORMAL)
         return
@@ -82,6 +127,7 @@ def run_scraping() -> None:
     # Re-enable the scrape button
     scrape_button.config(state=tk.NORMAL)
 
+# Create a function to add filtering functionalities in the GUI
 def apply_filters() -> None:
     """
     Filters and displays reviews based on specified sentiment analysis criteria.
@@ -107,6 +153,7 @@ def apply_filters() -> None:
     for review in filtered_reviews[:10]:  # Display 10 of the filtered reviews
         display_review(review)
 
+# Create a function to display a single review in the GUI
 def display_review(review) -> None:
     """
     Displays a single review in the text area of the GUI.
@@ -129,6 +176,7 @@ def display_review(review) -> None:
     )
     text_area.insert(tk.INSERT, display_text)
 
+# Create a function to start a new thread and run the scraping process
 def start_scraping_thread() -> None:
     """
     Starts a new thread to run the scraping process with the 'run_scraping' function.
