@@ -133,8 +133,9 @@ def check_and_load_or_scrape(product_id: str) -> Tuple[List[Dict], bool]:
 # Create a function to run the scraping process
 def run_scraping() -> None:
     """
-    Retrieves and displays Amazon product reviews based on the entered product ID. The display includes the review's title,
-    rating, date, product specifics, sentiment analysis scores (polarity and subjectivity), and the review text itself.
+    Retrieves and displays Amazon product reviews based on the entered product ID. 
+    The display includes the review's title, rating, date, product specifics, 
+    sentiment analysis scores (polarity and subjectivity), and the review text itself.
 
     Arguments:
     None: this function is intended to be called by a GUI event and does not take explicit arguments.
@@ -143,7 +144,7 @@ def run_scraping() -> None:
     None: this function does not return a value but updates the GUI directly.
     """
     global all_results
-    
+
     # Disable the scrape button to prevent concurrent scraping
     scrape_button.config(state=tk.DISABLED)
     
@@ -162,9 +163,13 @@ def run_scraping() -> None:
     if not data_loaded:
         save_to_csv(all_results, f"{product_id}_reviews.csv")
 
-    # Display the reviews
-    for review in all_results[:10]:
-        display_review(review)
+    # Check if there are any reviews
+    if not all_results:  # all_results is empty
+        text_area.insert(tk.INSERT, "This product has no reviews.\n")
+    else:
+        # Display the reviews
+        for review in all_results[:10]:
+            display_review(review)
 
     # Re-enable the scrape button
     scrape_button.config(state=tk.NORMAL)
