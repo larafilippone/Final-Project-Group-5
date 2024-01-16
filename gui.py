@@ -150,8 +150,11 @@ def apply_filters() -> None:
                         if min_subjectivity <= review['textblob_subjectivity'] <= max_subjectivity
                         and min_polarity <= review['textblob_polarity'] <= max_polarity]
 
-    for review in filtered_reviews[:10]:  # Display 10 of the filtered reviews
-        display_review(review)
+    if not filtered_reviews:  # Check if the filtered list is empty
+        text_area.insert(tk.INSERT, "No reviews matching the filtering criteria.\n")
+    else:
+        for review in filtered_reviews[:10]:  # Display up to 10 of the filtered reviews
+            display_review(review)
 
 # Create a function to display a single review in the GUI
 def display_review(review) -> None:
