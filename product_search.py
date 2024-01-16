@@ -6,7 +6,8 @@ from tkinter import ttk
 import re
 import random
 
-# Dictionary mapping search_param options to corresponding categories
+# Dictionary mapping search_param options to corresponding categories on the Amazon website 
+
 search_params = {
     " ": "All",
     "arts-crafts-intl-ship": "Arts & Crafts",
@@ -41,17 +42,13 @@ search_params = {
 # Invert the search_params dictionary
 inverted_search_params = {v: k for k, v in search_params.items()}
 
-# Create an empty DataFrame to store product data
+# Create an empty DataFrame to store the product data 
+
 product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
 
-# Create a list of different user agents
-user_agents = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
-]
 
 # Function to get Amazon product data
+
 def get_amazon_product_data(keyword, search_param, num_pages=1):
     product_data = {'Product Name': [], 'Product URL': [], 'ASIN': []}
     
@@ -94,7 +91,8 @@ def get_amazon_product_data(keyword, search_param, num_pages=1):
             soup = BeautifulSoup(response.content, 'html.parser')
 
             for product in soup.find_all('div', {'data-asin': True}):
-                product_name = product.find('span', {'class': 'a-size-medium'})
+                #product_name = product.find('span', {'class': 'a-size-medium'}) the source code is structured differently for different categories
+                product_name = product.find('span', class_=re.compile('^a-size-'))
                 product_url = product.find('a', {'class': 'a-link-normal'})
                 if product_name and product_url:
                     product_data['Product Name'].append(product_name.text.strip())
