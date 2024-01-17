@@ -332,10 +332,10 @@ def on_select(event: tk.Event) -> None:
 
     product_text.delete(1.0, tk.END)
     if product_text:
-        product_text.insert(tk.INSERT, product_text_scrape)
+        product_text.insert(tk.END, product_text_scrape)
 
     else:
-        product_text.insert(tk.INSERT, "This product has no description.")
+        product_text.insert(tk.END, "This product has no description.")
     
     # Enable the scrape button when a product is selected
     scrape_button.config(state=tk.NORMAL)
