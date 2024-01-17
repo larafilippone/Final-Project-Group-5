@@ -1,5 +1,6 @@
 from scraping import scrape_amazon_reviews
 from product_search import get_amazon_product_data
+from chatgpt import ask_chatgpt
 import tkinter as tk
 from tkinter import ttk
 from tkinter import scrolledtext
@@ -170,6 +171,9 @@ def run_scraping() -> None:
         # Display the reviews
         for review in all_results[:10]:
             display_review(review)
+        # Display the results from Chat GPT
+
+        display_chatgpt(all_results)
 
     # Re-enable the scrape button
     scrape_button.config(state=tk.NORMAL)
@@ -225,6 +229,41 @@ def display_review(review: Dict[str, Any]) -> None:
         "---------------------------------------------\n"
     )
     text_area.insert(tk.INSERT, display_text)
+
+def display_chatgpt(all_results):
+    """
+    Generates the summary and improvements and displays it 
+    """
+
+    # Loop through the list of dictionaries to generate a string for use of chatgpt 
+    reviews_string = ""
+    for review in all_results:
+        reviews_string += (
+            f"Title: {review['review_title']}\n"
+            f"Date: {review['review_date']}\n"
+            f"Review: {review['review_text']}\n"
+    )
+
+    # Generate and display summary 
+    request_summary = f"Please generate a precise summary of the reviews below. Limit to 64 bullet points.  {reviews_string}. "
+
+    # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
+    request_summary = request_summary[:4000]
+    review_summary_text.insert(tk.INSERT, f"Generating summary of the reviews...")
+    response_chatgpt = ask_chatgpt(request_summary)
+    review_summary_text.delete("1.0", tk.END)  # Delete all existing content
+    review_summary_text.insert(tk.INSERT, response_chatgpt)
+
+    # Generate and display product improvement suggestions 
+    request_summary = f"Please generate product improvement suggestions based on the negative points raised in the following reviews. Only display precise suggestions, no addtional text. Limit to 4 suggestions. {reviews_string}. "
+
+    # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
+    request_summary = request_summary[:4000]
+    product_improvement_text.insert(tk.INSERT, f"Generating product improvement suggestions...")
+    response_chatgpt = ask_chatgpt(request_summary)
+    product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
+    product_improvement_text.insert(tk.INSERT, response_chatgpt)
+
 
 # Create a function to display a wordcloud in the GUI
 def display_wordcloud() -> None:
@@ -326,9 +365,14 @@ def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
         # Save DataFrame to CSV
         product_df.to_csv('amazon_product_data.csv', index=False)
 
+
+
 # Initialize the main application window using Tkinter
 app = tk.Tk()
 app.title("Amazon Review Analyzer")  
+
+# automatically adapt 
+app.geometry("3024x1964")
 
 # Create and place widgets using grid
 tk.Label(app, text="Keyword:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
@@ -424,6 +468,22 @@ wordcloud_button.grid(row=12, column=0, columnspan=2, pady=5)
 # Create a scrolled text area where the scraped review data will be displayed
 text_area = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=40)
 text_area.grid(row=13, column=0, columnspan=2, pady=10)
+
+# Create a label for the Review Summary
+review_summary_label = tk.Label(app, text="Review Summary:")
+review_summary_label.grid(row=3, column=2, padx=5, pady=5, sticky="e")
+
+# Create a text field for displaying the Review Summary
+review_summary_text = tk.Text(app, wrap=tk.WORD, width=90, height=10)  # Adjust width and height as needed
+review_summary_text.grid(row=4, column=2, padx=5, pady=5)
+
+# Create a label for Product Improvement Suggestions
+product_improvement_label = tk.Label(app, text="Product Improvement Suggestions:")
+product_improvement_label.grid(row=5, column=2, padx=5, pady=5, sticky="e")
+
+# Create a text field for displaying Product Improvement Suggestions
+product_improvement_text = tk.Text(app, wrap=tk.WORD, width=90, height=10)  # Adjust width and height as needed
+product_improvement_text.grid(row=6, column=2, padx=5, pady=5)
 
 # Start the application's main event loop, ready for user interaction
 app.mainloop()
