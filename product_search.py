@@ -6,41 +6,7 @@ from tkinter import ttk
 import re
 import random
 
-# Dictionary mapping search_param options to corresponding categories on the Amazon website 
 
-search_params = {
-    " ": "All",
-    "arts-crafts-intl-ship": "Arts & Crafts",
-    "automotive-intl-ship": "Automotive",
-    "baby-products-intl-ship": "Baby",
-    "beauty-intl-ship": "Beauty & Personal Care",
-    "stripbooks-intl-ship": "Books",
-    "fashion-boys-intl-ship": "Boys' Fashion",
-    "computers-intl-ship": "Computers",
-    "deals-intl-ship": "Deals",
-    "digital-music": "Digital Music",
-    "electronics-intl-ship": "Electronics",
-    "fashion-girls-intl-ship": "Girls' Fashion",
-    "hpc-intl-ship": "Health & Household",
-    "kitchen-intl-ship": "Home & Kitchen",
-    "industrial-intl-ship": "Industrial & Scientific",
-    "digital-text": "Kindle Store",
-    "luggage-intl-ship": "Luggage",
-    "fashion-mens-intl-ship": "Men's Fashion",
-    "movies-tv-intl-ship": "Movies & TV",
-    "music-intl-ship": "Movies, CDs & Vinyl",
-    "pets-intl-ship": "Pet Supplies",
-    "instant-video": "Prime Video",
-    "software-intl-ship": "Software",
-    "sporting-intl-ship": "Sports & Outdoors",
-    "tools-intl-ship": "Tools & Home Improvement",
-    "toys-and-games-intl-ship": "Toys & Games",
-    "videogames-intl-ship": "Video Games",
-    "fashion-womens-intl-ship": "Women's Fashion"
-}
-
-# Invert the search_params dictionary
-inverted_search_params = {v: k for k, v in search_params.items()}
 
 
 def get_amazon_product_data(keyword, search_param, num_pages=1):
@@ -100,15 +66,21 @@ def get_amazon_product_data(keyword, search_param, num_pages=1):
 
             for product in soup.find_all('div', {'data-asin': True}):
                 #product_name = product.find('span', {'class': 'a-size-medium'}) the source code is structured differently for different categories
-                product_name = product.find('span', class_=re.compile('^a-size-'))
+                product_name = product.find_all('span', class_=re.compile('^a-size-'))
+    
+                # Concatenate the text from all matching span elements
+                product_name = ' '.join(span.text.strip() for span in product_name)
+                product_name = product_name[:70]
+
                 product_url = product.find('a', {'class': 'a-link-normal'})
-                if product_name and product_url:
-                    product_data['Product Name'].append(product_name.text.strip())
-                    product_data['Product URL'].append(f"https://www.amazon.com{product_url['href']}")
-                    
-                    # Extract ASIN from the URL
+                if product_url:
+                # Extract ASIN from the URL
                     asin_match = re.search(r'/dp/(\w+)/', product_url['href'])
                     asin = asin_match.group(1) if asin_match else None
+
+                if product_name and product_url and asin:
+                    product_data['Product Name'].append(product_name)
+                    product_data['Product URL'].append(f"https://www.amazon.com{product_url['href']}")
                     product_data['ASIN'].append(asin)
         else:
             print(f"Failed to retrieve data from page {page}. Status code: {response.status_code}")

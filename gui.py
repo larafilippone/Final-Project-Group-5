@@ -245,7 +245,7 @@ def display_chatgpt(all_results):
     )
 
     # Generate and display summary 
-    request_summary = f"Please generate a precise summary of the reviews below. Limit to 64 bullet points.  {reviews_string}. "
+    request_summary = f"Please summaries the reviews below in one precise text. Including general sentiment. Limit to 6 bullet points.  {reviews_string}. "
 
     # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
     request_summary = request_summary[:4000]
@@ -394,8 +394,16 @@ num_pages_entry = tk.Entry(app)
 num_pages_entry.grid(row=2, column=1, padx=5, pady=5)
 
 # Create button to start the search
-search_button = tk.Button(app, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), search_param_var.get(), int(num_pages_entry.get())))
+search_button = tk.Button(app, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), value_to_key(search_param_var.get()), int(num_pages_entry.get())))
 search_button.grid(row=3, column=0, columnspan=2, pady=10)
+
+#Returns the key for the value of the search_params dictionary - to sort out the problem that the value should be display in the dropdown but the key used for the search
+def value_to_key(search_value):
+
+    for key, value in search_params.items():
+        if value == search_value:
+            print(key)
+            return key
 
 # Treeview for displaying product list
 products_tree = ttk.Treeview(app, columns=("Number", "Product Name", "Product URL", "ASIN"), show="headings")
