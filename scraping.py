@@ -77,12 +77,14 @@ def get_reviews_from_html(page_html: str) -> list:
     """
     soup = BeautifulSoup(page_html, "lxml")
 
-    # Try the first class
-    reviews = soup.find_all("div", class_="a-section celwidget")
+    # Try finding review elements by 'data-hook' attribute with value 'review'
+    reviews = soup.find_all("div", attrs={"data-hook": "review"})
     
-    # If no reviews are found with the first class, try this different class
+    # If no reviews are found with the 'data-hook' attribute, try different classes
     if not reviews:
-        reviews = soup.find_all("div", class_="a-section review aok-relative")
+        reviews = soup.find_all("div", class_="a-section celwidget")
+        if not reviews:
+            reviews = soup.find_all("div", class_="a-section review aok-relative")
     
     return reviews
 
@@ -112,9 +114,14 @@ def get_review_text(soup_object: BeautifulSoup) -> str:
     str: the text of the review.
     """
     review_text = soup_object.find(
-        "span", {"class": "a-size-base review-text review-text-content"}
-    ).get_text()
-    return review_text.strip()
+        "span", 
+        {"class": "a-size-base review-text review-text-content"}
+    )
+    # If the class selector doesn't find the element, try the data-hook attribute
+    if not review_text:
+        review_text = soup_object.find("span", {"data-hook": "review-body"})
+    
+    return review_text.get_text().strip() if review_text else "No review text"
 
 def get_review_header(soup_object: BeautifulSoup) -> str:
     """
@@ -127,9 +134,15 @@ def get_review_header(soup_object: BeautifulSoup) -> str:
     str: the header or title of the review.
     """
     review_header = soup_object.find(
-        "a", {"class": "a-size-base a-link-normal review-title a-color-base review-title-content a-text-bold"}
-    ).get_text()
-    return review_header.strip()
+        "a", 
+        {"class": "a-size-base a-link-normal review-title a-color-base review-title-content a-text-bold"}
+    )
+    # If the class selector doesn't find the element, try the data-hook attribute
+    if not review_header:
+        review_header = soup_object.find("a", {"data-hook": "review-title"})
+    
+    return review_header.get_text().strip() if review_header else "No title"
+
 
 def get_number_stars(soup_object: BeautifulSoup) -> str:
     """
@@ -141,8 +154,12 @@ def get_number_stars(soup_object: BeautifulSoup) -> str:
     Returns:
     str: the star rating of the review.
     """
-    stars = soup_object.find("span", {"class": "a-icon-alt"}).get_text()
-    return stars.strip()
+    star_element = soup_object.find("span", {"class": "a-icon-alt"})
+    # If the class selector finds the element, extract text, otherwise return "No rating"
+    if star_element:
+        return star_element.get_text().strip()
+    else:
+        return "No rating"
 
 def analyze_sentiment_with_textblob(text: str):
     """
