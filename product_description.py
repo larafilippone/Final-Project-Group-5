@@ -51,7 +51,7 @@ def scrape_amazon_product_description(product_url):
         if product_description_div:
             # Extact text from paragraphs inside the div
             paragraphs = product_description_div.find_all('p')
-            description_text = '\n'.join(paragraph.get_text(separator='\n', strip=True) for paragraph in paragraphs)
+            description_text = str('\n'.join(paragraph.get_text(separator='\n', strip=True) for paragraph in paragraphs))
 
             return description_text
 
