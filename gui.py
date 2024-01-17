@@ -245,7 +245,7 @@ def display_chatgpt(all_results):
     )
 
     # Generate and display summary 
-    request_summary = f"Please summaries the reviews below in one precise text. Including general sentiment. Limit to 6 bullet points.  {reviews_string}. "
+    request_summary = f"Summaries the negative and positive sentiment of the reviews attached. Limit to 6 bullet points.  {reviews_string}. "
 
     # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
     request_summary = request_summary[:4000]
