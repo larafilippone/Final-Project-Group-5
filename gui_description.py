@@ -248,7 +248,7 @@ def display_chatgpt(all_results):
     # Generate and display summary 
     request_summary = f"Summarize the negative and positive sentiment of the reviews attached. Limit to 6 bullet points.  {reviews_string}. "
 
-    # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
+    # limited length of input for Chat GPT API allowed - limit the length of the string to 4000 tokens
     request_summary = request_summary[:4000]
     review_summary_text.insert(tk.INSERT, f"Generating summary of the reviews...")
     response_chatgpt = ask_chatgpt(request_summary)
@@ -376,8 +376,6 @@ def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
         # Save DataFrame to CSV
         product_df.to_csv('amazon_product_data.csv', index=False)
 
-
-
 # Initialize the main application window using Tkinter
 app = tk.Tk()
 app.title("Amazon Review Analyzer")  
@@ -443,15 +441,16 @@ scrape_button.grid(row=6, column=0, columnspan=2, pady=5)
 
 # Frame for the subjectivity filters
 subjectivity_frame = tk.Frame(left_frame)
+subjectivity_frame.grid(row=7, column=0, columnspan=1, pady=(5, 5), sticky='ew')
 min_subjectivity_label = tk.Label(subjectivity_frame, text="Min Subjectivity (0 to 1):")
-min_subjectivity_label.pack(side=tk.LEFT)
+min_subjectivity_label.grid(row=0, column=0, padx=5, pady=2, sticky='e')
 min_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
-min_subjectivity_entry.pack(side=tk.LEFT)
+min_subjectivity_entry.grid(row=0, column=1, padx=5, pady=2, sticky='w')
 
 max_subjectivity_label = tk.Label(subjectivity_frame, text="Max Subjectivity (0 to 1):")
-max_subjectivity_label.pack(side=tk.LEFT)
+max_subjectivity_label.grid(row=1, column=0, padx=5, pady=2, sticky='e')
 max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
-max_subjectivity_entry.pack(side=tk.LEFT)
+max_subjectivity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w')
 subjectivity_frame.grid(row=7, column=0, columnspan=2, pady=(5, 5))
 
 # Define a smaller font for explanations
@@ -462,20 +461,21 @@ subjectivity_explanation_text = (
     "Subjectivity score measures how subjective or opinionated the review is,\n"
     "and ranges from 0 (completely objective) to 1 (completely subjective)."
 )
-subjectivity_explanation = tk.Label(left_frame, text=subjectivity_explanation_text, font=explanation_font, width = 100)
-subjectivity_explanation.grid(row=8, column=0, columnspan=2, pady=(5, 5))
+subjectivity_explanation = tk.Label(left_frame, text=subjectivity_explanation_text, font=explanation_font, justify="left")
+subjectivity_explanation.grid(row=7, column=1, padx=5, pady=5, sticky='w')
 
 # Frame for the polarity filters
 polarity_frame = tk.Frame(left_frame)
+polarity_frame.grid(row=9, column=0, columnspan=1, pady=(5, 5), sticky='ew')
 min_polarity_label = tk.Label(polarity_frame, text="Min Polarity (-1 to 1):")
-min_polarity_label.pack(side=tk.LEFT)
+min_polarity_label.grid(row=0, column=0, padx=5, pady=2, sticky='e')
 min_polarity_entry = tk.Entry(polarity_frame, width=5)
-min_polarity_entry.pack(side=tk.LEFT)
+min_polarity_entry.grid(row=0, column=1, padx=5, pady=2, sticky='w')
 
 max_polarity_label = tk.Label(polarity_frame, text="Max Polarity (-1 to 1):")
-max_polarity_label.pack(side=tk.LEFT)
+max_polarity_label.grid(row=1, column=0, padx=5, pady=2, sticky='e')
 max_polarity_entry = tk.Entry(polarity_frame, width=5)
-max_polarity_entry.pack(side=tk.LEFT)
+max_polarity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w')
 polarity_frame.grid(row=9, column=0, columnspan=2, pady=(5, 5))
 
 # Polarity explanation
@@ -483,8 +483,8 @@ polarity_explanation_text = (
     "Polarity score measures how negative or positive the sentiment of the review is,\n"
     "and ranges from -1 (extremely negative) to 1 (extremely positive)."
 )
-polarity_explanation = tk.Label(left_frame, text=polarity_explanation_text, font=explanation_font)
-polarity_explanation.grid(row=10, column=0, columnspan=2, pady=(5, 10))
+polarity_explanation = tk.Label(left_frame, text=polarity_explanation_text, font=explanation_font, justify="left")
+polarity_explanation.grid(row=9, column=1, padx=5, pady=5, sticky='w')
 
 # Create a button to apply filters
 filter_button = tk.Button(left_frame, text="Apply Filters", command=apply_filters)
