@@ -394,27 +394,27 @@ app.grid_columnconfigure(1, weight=1, uniform="group1")
 app.grid_rowconfigure(0, weight=1)
 
 # Populate the left frame
-tk.Label(left_frame, text="Keyword:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+tk.Label(left_frame, text="Keyword:").grid(row=0, column=0, pady=5, sticky="e")
 keyword_entry = tk.Entry(left_frame)
-keyword_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+keyword_entry.grid(row=0, column=1, padx=114, pady=5, sticky="w")
 
 # Create widgets for search parameter and number of pages
-tk.Label(app, text="Search Parameter:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
-tk.Label(app, text="Number of Pages:").grid(row=2, column=0, padx=5, pady=5, sticky="e")
+tk.Label(left_frame, text="Search Parameter:").grid(row=1, column=0, pady=5, sticky="e")
+tk.Label(left_frame, text="Number of Pages:").grid(row=2, column=0, pady=5, sticky="e")
 
 # Create dropdown menu for search_param
 search_param_var = tk.StringVar()
 search_param_dropdown = ttk.Combobox(left_frame, textvariable=search_param_var, values=list(search_params.values()))
-search_param_dropdown.set(list(search_params.values())[0])  # Set default value
-search_param_dropdown.grid(row=1, column=1, padx=5, pady=5)
+search_param_dropdown.set(list(search_params.values())[0])
+search_param_dropdown.grid(row=1, column=1, padx=104, pady=5, sticky="w")
 
 # Create entry to set the number of pages
 num_pages_entry = tk.Entry(left_frame)
-num_pages_entry.grid(row=2, column=1, padx=5, pady=5)
+num_pages_entry.grid(row=2, column=1, padx=114, pady=5, sticky="w")
 
 # Create button to start the search
 search_button = tk.Button(left_frame, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), value_to_key(search_param_var.get()), int(num_pages_entry.get())))
-search_button.grid(row=3, column=0, columnspan=2, pady=10)
+search_button.grid(row=3, column=1, columnspan=2, padx=128, pady=10, sticky="w")
 
 #Returns the key for the value of the search_params dictionary - to sort out the problem that the value should be display in the dropdown but the key used for the search
 def value_to_key(search_value):
@@ -437,7 +437,7 @@ products_tree.bind("<<TreeviewSelect>>", on_select)
 
 # Create a button that, when clicked, will start the scraping process
 scrape_button = tk.Button(left_frame, text="Scrape Reviews", command=start_scraping_thread, state=tk.DISABLED)
-scrape_button.grid(row=6, column=0, columnspan=2, pady=5)
+scrape_button.grid(row=6, column=0, columnspan=2, pady=5, sticky="n")
 
 # Frame for the subjectivity filters
 subjectivity_frame = tk.Frame(left_frame)
@@ -451,7 +451,7 @@ max_subjectivity_label = tk.Label(subjectivity_frame, text="Max Subjectivity (0 
 max_subjectivity_label.grid(row=1, column=0, padx=5, pady=2, sticky='e')
 max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
 max_subjectivity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w')
-subjectivity_frame.grid(row=7, column=0, columnspan=2, pady=(5, 5))
+subjectivity_frame.grid(row=7, column=0, columnspan=2, pady=(1, 1))
 
 # Define a smaller font for explanations
 explanation_font = tkFont.Font(size=9)
@@ -462,7 +462,7 @@ subjectivity_explanation_text = (
     "and ranges from 0 (completely objective) to 1 (completely subjective)."
 )
 subjectivity_explanation = tk.Label(left_frame, text=subjectivity_explanation_text, font=explanation_font, justify="left")
-subjectivity_explanation.grid(row=7, column=1, padx=5, pady=5, sticky='w')
+subjectivity_explanation.grid(row=7, column=1, padx=1, pady=1, sticky='w')
 
 # Frame for the polarity filters
 polarity_frame = tk.Frame(left_frame)
@@ -476,7 +476,7 @@ max_polarity_label = tk.Label(polarity_frame, text="Max Polarity (-1 to 1):")
 max_polarity_label.grid(row=1, column=0, padx=5, pady=2, sticky='e')
 max_polarity_entry = tk.Entry(polarity_frame, width=5)
 max_polarity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w')
-polarity_frame.grid(row=9, column=0, columnspan=2, pady=(5, 5))
+polarity_frame.grid(row=9, column=0, columnspan=2, pady=(1, 1))
 
 # Polarity explanation
 polarity_explanation_text = (
@@ -484,15 +484,21 @@ polarity_explanation_text = (
     "and ranges from -1 (extremely negative) to 1 (extremely positive)."
 )
 polarity_explanation = tk.Label(left_frame, text=polarity_explanation_text, font=explanation_font, justify="left")
-polarity_explanation.grid(row=9, column=1, padx=5, pady=5, sticky='w')
+polarity_explanation.grid(row=9, column=1, padx=1, pady=1, sticky='w')
 
 # Create a button to apply filters
 filter_button = tk.Button(left_frame, text="Apply Filters", command=apply_filters)
-filter_button.grid(row=11, column=0, columnspan=2, pady=5)
+filter_button.grid(row=11, column=0, columnspan=2, pady=1)
+
+# Create an explanation for the word cloud feature
+wordcloud_frame = tk.Frame(left_frame)
+wordcloud_frame.grid(row=12, column=0, columnspan=2, pady=(5, 5), sticky='ew')
+wordcloud_explanation = tk.Label(wordcloud_frame, text="Generate a word cloud of keywords in the selected reviews:", wraplength=400, justify="left")
+wordcloud_explanation.grid(row=0, column=0, sticky='w')
 
 # Create a button to display the word cloud
 wordcloud_button = tk.Button(left_frame, text="Show Word Cloud", command=display_wordcloud)
-wordcloud_button.grid(row=12, column=0, columnspan=2, pady=5)
+wordcloud_button.grid(row=12, column=1, padx=120, pady=5, sticky='w')
 
 # Create a scrolled text area where the scraped review data will be displayed
 text_area = scrolledtext.ScrolledText(left_frame, wrap=tk.WORD, width=100, height=40)
