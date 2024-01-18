@@ -34,7 +34,6 @@ search_params = {
     "fashion-boys-intl-ship": "Boys' Fashion",
     "computers-intl-ship": "Computers",
     "deals-intl-ship": "Deals",
-    "digital-music": "Digital Music",
     "electronics-intl-ship": "Electronics",
     "fashion-girls-intl-ship": "Girls' Fashion",
     "hpc-intl-ship": "Health & Household",
@@ -43,10 +42,7 @@ search_params = {
     "digital-text": "Kindle Store",
     "luggage-intl-ship": "Luggage",
     "fashion-mens-intl-ship": "Men's Fashion",
-    "movies-tv-intl-ship": "Movies & TV",
-    "music-intl-ship": "Movies, CDs & Vinyl",
     "pets-intl-ship": "Pet Supplies",
-    "instant-video": "Prime Video",
     "software-intl-ship": "Software",
     "sporting-intl-ship": "Sports & Outdoors",
     "tools-intl-ship": "Tools & Home Improvement",
@@ -376,7 +372,7 @@ def on_select(event: tk.Event) -> None:
     product_text_scrape = scrape_amazon_product_description(product_url)
 
     product_text.delete(1.0, tk.END)
-    if product_text:
+    if product_text_scrape:
         product_text.insert(tk.END, product_text_scrape)
 
     else:
