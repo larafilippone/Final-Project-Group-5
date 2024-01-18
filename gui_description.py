@@ -472,7 +472,12 @@ tk.Label(left_frame, text="Number of Pages:").grid(row=2, column=0, pady=5, stic
 
 # Create dropdown menu for search_param
 search_param_var = tk.StringVar()
-search_param_dropdown = ttk.Combobox(left_frame, textvariable=search_param_var, values=list(search_params.values()))
+search_param_dropdown = ttk.Combobox(
+    left_frame, 
+    textvariable=search_param_var, 
+    values=list(search_params.values()), 
+    state='readonly'  # Set the Combobox state to readonly
+)
 search_param_dropdown.set(list(search_params.values())[0])
 search_param_dropdown.grid(row=1, column=1, padx=80, pady=5, sticky="w")
 
