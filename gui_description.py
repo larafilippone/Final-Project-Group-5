@@ -147,7 +147,6 @@ def run_scraping() -> None:
     None: this function does not return a value but updates the GUI directly.
     """
     global all_results
-
     # Disable the scrape button to prevent concurrent scraping
     scrape_button.config(state=tk.DISABLED)
     
@@ -167,14 +166,17 @@ def run_scraping() -> None:
         save_to_csv(all_results, f"{product_id}_reviews.csv")
 
     # Check if there are any reviews
-    if not all_results:  # all_results is empty
+    if not all_results:
         text_area.insert(tk.INSERT, "This product has no reviews.\n")
     else:
         # Display the reviews
         for review in all_results[:10]:
             display_review(review)
-        # Display the results from Chat GPT
 
+        # Display average polarity and emoji
+        display_average_polarity_and_color()
+
+        # Display results from ChatGPT
         display_chatgpt(all_results)
 
     # Re-enable the scrape button
@@ -275,6 +277,31 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
     product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
     product_improvement_text.insert(tk.INSERT, response_chatgpt)
 
+# Create function to calculate average polarity score and output corresponding emoji
+def get_polarity_color(reviews: List[Dict[str, Any]]) -> Tuple[float, str]:
+    total_polarity = sum(review.get('textblob_polarity', 0) for review in reviews)
+    average_polarity = total_polarity / len(reviews) if reviews else 0
+
+    # Determine the color based on average polarity
+    if average_polarity < -0.25:
+        color = "red"  # Red light for negative sentiment
+    elif average_polarity > 0.25:
+        color = "green"  # Green light for positive sentiment
+    else:
+        color = "orange"  # Orange light for neutral sentiment
+
+    return average_polarity, color
+
+def display_average_polarity_and_color():
+    if all_results:
+        average_polarity, color = get_polarity_color(all_results)
+        polarity_text = f"Average Polarity Score: {average_polarity:.2f}"
+        polarity_label.config(text=polarity_text)  # Update label text
+        polarity_canvas.delete("all")  # Clear previous circle
+        polarity_canvas.create_oval(5, 5, 40, 40, fill=color, outline=color)  # Draw circle
+    else:
+        polarity_label.config(text="No reviews available to calculate average polarity.")
+        polarity_canvas.delete("all")  # Clear the canvas
 
 # Create a function to display a wordcloud in the GUI
 def display_wordcloud() -> None:
@@ -551,6 +578,14 @@ product_improvement_label.grid(row=7, column=2, padx=5, pady=5, sticky="e")
 # Create a text field for displaying Product Improvement Suggestions
 product_improvement_text = tk.Text(right_frame, wrap=tk.WORD, width=90, height=10)  
 product_improvement_text.grid(row=8, column=2, padx=5, pady=5)
+
+# Canvas for displaying the polarity light
+polarity_canvas = tk.Canvas(right_frame, width=40, height=40, bg="white")
+polarity_canvas.grid(row=15, column=2, padx=1, pady=10, sticky="n")
+
+# Label for displaying average polarity
+polarity_label = tk.Label(right_frame, text="Average Polarity Score: ", font=("Helvetica", 12))
+polarity_label.grid(row=14, column=2, columnspan=2, pady=10, sticky="n")
 
 # Start the application's main event loop, ready for user interaction
 app.mainloop()
