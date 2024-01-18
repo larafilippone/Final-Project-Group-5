@@ -44,15 +44,83 @@ def scrape_amazon_product_description(product_url):
     response = requests.get(product_url, headers=headers)
 
     if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        # Find the div with ID 'productDescription' and the paragraphs within it
-        product_description_div = soup.find('div', {'id': 'productDescription'})
         
-        if product_description_div:
-            # Extact text from paragraphs inside the div
-            paragraphs = product_description_div.find_all('p')
-            description_text = str('\n'.join(paragraph.get_text(separator='\n', strip=True) for paragraph in paragraphs))
+        soup = BeautifulSoup(response.content, 'html.parser')
+        no_return = True # to not try to different search patterns 
+    
+        if soup.find('div', {'id': 'feature-bullets'}):
+            # Find all list items within the unordered list
+            product_description_div = soup.find('div', {'id': 'feature-bullets'})
+            
+            unordered_list = product_description_div.find('ul', {'class': 'a-unordered-list'})
 
-            return description_text
+            if unordered_list:
+                # Find all list items within the unordered list
+                item_list = unordered_list.find_all('li')
+
+                # Extract text from each list item
+                description_text = '\n'.join(item.find('span', {'class': 'a-list-item'}).text.strip() for item in item_list)
+
+                print("version 1")
+                no_return = False
+                return description_text
+
+        if soup.find('div', {'class': 'a-expander-content'}) and no_return:
+            product_description_div = soup.find('div', {'class': 'a-expander-content'})
+    
+            # Check for an unordered list
+            unordered_lists = product_description_div.find_all('ul', {'class': 'a-unordered-list'})
+
+            if unordered_lists:
+                description_text = ""
+                for ul in unordered_lists:
+                # Find all list items within the unordered list
+                    item_list = ul.find_all('li')
+
+                    # Extract text from each list item
+                    list_text = '\n'.join('/ ' + item.find('span', {'class': 'a-list-item'}).text.strip() for item in item_list)
+
+                    # Append the list text to the overall description
+                    description_text += list_text
+
+                print("version 2")
+                no_return = False
+                return description_text.strip() 
+
+
+        #other books
+        if soup.find('div', {'id': 'bookDescription_feature_div'}) and no_return:
+            book_description_div = soup.find('div', {'id': 'bookDescription_feature_div'})
+
+            if book_description_div:
+                # Find the div with data-a-expander-name 'book_description_expander'
+                expander_div = book_description_div.find('div', {'data-a-expander-name': 'book_description_expander'})
+    
+                # Check if the expander div exists
+                if expander_div:
+             
+                    # Find the span elements within the expander div
+                    span_elements = expander_div.find_all('span')
+        
+                    # Iterate through the span elements and concatenate text
+                    description_text = ""
+                    for span_tag in span_elements:
+                        
+                        description_text += span_tag.get_text(separator='\n', strip=True) + '\n'
+
+                    print('version 3')  # Strip any leading/trailing whitespace
+                    no_return = False
+                    return description_text.strip() 
+
+    
+        if soup.find('div', {'id': 'productDescription'}) and no_return:
+            product_description_div = soup.find('div', {'id': 'productDescription'})
+            # Extract text from paragraphs inside the div
+            paragraphs = product_description_div.find_all('p')
+            description_text = '\n'.join(paragraph.get_text(separator='\n', strip=True) for paragraph in paragraphs)
+            print('version 4')
+            return description_text    
+        
+        # try structure with productDescription 
 
     return None
