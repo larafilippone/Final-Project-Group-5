@@ -542,14 +542,15 @@ filter_button = tk.Button(left_frame, text="Apply Filters", command=apply_filter
 filter_button.grid(row=11, column=0, columnspan=2, pady=1)
 
 # Create an explanation for the word cloud feature
-wordcloud_frame = tk.Frame(left_frame)
+wordcloud_frame = tk.Frame(right_frame)
 wordcloud_frame.grid(row=12, column=0, columnspan=2, pady=(5, 5), sticky='ew')
-wordcloud_explanation = tk.Label(wordcloud_frame, text="Generate a word cloud of keywords in the selected reviews:", wraplength=400, justify="left")
-wordcloud_explanation.grid(row=0, column=0, sticky='w')
+wordcloud_explanation = tk.Label(right_frame, text="Generate a word cloud of keywords\n"
+                                                   "in the selected reviews:", wraplength=400, justify="right")
+wordcloud_explanation.grid(row=16, column=2, padx=90, pady=(10, 0), sticky="w")
 
 # Create a button to display the word cloud
-wordcloud_button = tk.Button(left_frame, text="Show Word Cloud", command=display_wordcloud)
-wordcloud_button.grid(row=12, column=1, padx=120, pady=5, sticky='w')
+wordcloud_button = tk.Button(right_frame, text="Show Word Cloud", command=display_wordcloud)
+wordcloud_button.grid(row=16, column=2, padx=5, pady=5)
 
 # Create a scrolled text area where the scraped review data will be displayed
 text_area = scrolledtext.ScrolledText(left_frame, wrap=tk.WORD, width=93, height=40)
@@ -581,11 +582,11 @@ product_improvement_text.grid(row=8, column=2, padx=5, pady=5)
 
 # Canvas for displaying the polarity light
 polarity_canvas = tk.Canvas(right_frame, width=40, height=40, bg="white")
-polarity_canvas.grid(row=15, column=2, padx=1, pady=10, sticky="n")
+polarity_canvas.grid(row=14, column=2, padx=1, pady=10, sticky="n")
 
 # Label for displaying average polarity
-polarity_label = tk.Label(right_frame, text="Average Polarity Score: ", font=("Helvetica", 12))
-polarity_label.grid(row=14, column=2, columnspan=2, pady=10, sticky="n")
+polarity_label = tk.Label(right_frame, text="Average Polarity Score: ", font=("Helvetica", 9))
+polarity_label.grid(row=14, column=2, columnspan=2, padx=150, pady=10, sticky="w")
 
 # Start the application's main event loop, ready for user interaction
 app.mainloop()
