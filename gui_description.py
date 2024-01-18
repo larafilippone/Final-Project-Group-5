@@ -430,7 +430,13 @@ products_tree.heading("Number", text="Number")
 products_tree.heading("Product Name", text="Product Name")
 products_tree.heading("Product URL", text="Product URL")
 products_tree.heading("ASIN", text="ASIN")
-products_tree.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+products_tree.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="w")
+
+# Configure the column widths
+products_tree.column("Number", width=100, anchor='center')
+products_tree.column("Product Name", width=275, anchor='center')
+products_tree.column("Product URL", width=275, anchor='center')
+products_tree.column("ASIN", width=100, anchor='center')
 
 # Bind the on_select function to the Treeview's selection event
 products_tree.bind("<<TreeviewSelect>>", on_select)
@@ -501,8 +507,8 @@ wordcloud_button = tk.Button(left_frame, text="Show Word Cloud", command=display
 wordcloud_button.grid(row=12, column=1, padx=120, pady=5, sticky='w')
 
 # Create a scrolled text area where the scraped review data will be displayed
-text_area = scrolledtext.ScrolledText(left_frame, wrap=tk.WORD, width=100, height=40)
-text_area.grid(row=13, column=0, columnspan=2, pady=10)
+text_area = scrolledtext.ScrolledText(left_frame, wrap=tk.WORD, width=93, height=40)
+text_area.grid(row=13, column=0, columnspan=2, pady=10, sticky="w")
 
 # Create a label for the Product Description
 product_text_label = tk.Label(right_frame, text="Product Description:")
