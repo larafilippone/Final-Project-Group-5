@@ -108,7 +108,7 @@ def load_from_csv(filename: str) -> pd.DataFrame:
     return pd.read_csv(filename)
 
 # Create a function to either load data from CSV file or scrape new data
-def check_and_load_or_scrape(product_id: str) -> Tuple[List[Dict], bool]:
+def check_and_load_or_scrape(product_id: str, num_review_pages: int) -> Tuple[List[Dict], bool]:
     """
     Checks if data for the given product ID is already saved, loads it if so,
     otherwise scrapes new data from Amazon.
@@ -128,7 +128,8 @@ def check_and_load_or_scrape(product_id: str) -> Tuple[List[Dict], bool]:
             print(f"Error loading data: {e}")
             return [], False
     else:
-        urls = [f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}" for page in range(1, 11)]
+        urls = [f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}" 
+                for page in range(1, num_review_pages + 1)]
         scraped_data = scrape_amazon_reviews(urls)
         save_to_csv(scraped_data, filename)  # Save the scraped data
         return scraped_data, False
@@ -146,7 +147,8 @@ def run_scraping() -> None:
     Returns:
     None: this function does not return a value but updates the GUI directly.
     """
-    global all_results
+    global all_results, product_id
+
     # Disable the scrape button to prevent concurrent scraping
     scrape_button.config(state=tk.DISABLED)
     
@@ -160,23 +162,29 @@ def run_scraping() -> None:
 
     text_area.insert(tk.INSERT, f"Scraping reviews for product ID: {product_id}...\n")
 
-    # Check if data is already saved and load it, otherwise scrape new data
-    all_results, data_loaded = check_and_load_or_scrape(product_id)
-    if not data_loaded:
-        save_to_csv(all_results, f"{product_id}_reviews.csv")
+    # Retrieve the number of review pages from the entry, with a default value
+    try:
+        num_review_pages = int(review_pages_entry.get())
+    except ValueError:
+        text_area.insert(tk.INSERT, "Please enter a valid number of review pages.\n")
+        scrape_button.config(state=tk.NORMAL)
+        return
+
+    # Use the num_review_pages in the check_and_load_or_scrape function
+    all_results, data_loaded = check_and_load_or_scrape(product_id, num_review_pages)
 
     # Check if there are any reviews
     if not all_results:
-        text_area.insert(tk.INSERT, "This product has no reviews.\n")
+        text_area.insert(tk.INSERT, "This product has no reviews or there was an error in scraping.\n")
     else:
         # Display the reviews
-        for review in all_results[:10]:
+        for review in all_results[:10]:  # Display only the first 10 reviews for brevity
             display_review(review)
 
-        # Display average polarity and emoji
+        # Display average polarity and emoji, if applicable
         display_average_polarity_and_color()
 
-        # Display results from ChatGPT
+        # Display results from ChatGPT, if applicable
         display_chatgpt(all_results)
 
     # Re-enable the scrape button
@@ -433,7 +441,7 @@ app.grid_rowconfigure(0, weight=1)
 # Populate the left frame
 tk.Label(left_frame, text="Keyword:").grid(row=0, column=0, pady=5, sticky="e")
 keyword_entry = tk.Entry(left_frame)
-keyword_entry.grid(row=0, column=1, padx=114, pady=5, sticky="w")
+keyword_entry.grid(row=0, column=1, padx=87, pady=5, sticky="w")
 
 # Create widgets for search parameter and number of pages
 tk.Label(left_frame, text="Search Parameter:").grid(row=1, column=0, pady=5, sticky="e")
@@ -443,15 +451,15 @@ tk.Label(left_frame, text="Number of Pages:").grid(row=2, column=0, pady=5, stic
 search_param_var = tk.StringVar()
 search_param_dropdown = ttk.Combobox(left_frame, textvariable=search_param_var, values=list(search_params.values()))
 search_param_dropdown.set(list(search_params.values())[0])
-search_param_dropdown.grid(row=1, column=1, padx=104, pady=5, sticky="w")
+search_param_dropdown.grid(row=1, column=1, padx=80, pady=5, sticky="w")
 
 # Create entry to set the number of pages
 num_pages_entry = tk.Entry(left_frame)
-num_pages_entry.grid(row=2, column=1, padx=114, pady=5, sticky="w")
+num_pages_entry.grid(row=2, column=1, padx=87, pady=5, sticky="w")
 
 # Create button to start the search
 search_button = tk.Button(left_frame, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), value_to_key(search_param_var.get()), int(num_pages_entry.get())))
-search_button.grid(row=3, column=1, columnspan=2, padx=128, pady=10, sticky="w")
+search_button.grid(row=3, column=1, columnspan=2, padx=103, pady=10, sticky="w")
 
 #Returns the key for the value of the search_params dictionary - to sort out the problem that the value should be display in the dropdown but the key used for the search
 def value_to_key(search_value: str) -> Optional[str]:
@@ -496,12 +504,12 @@ subjectivity_frame.grid(row=7, column=0, columnspan=1, pady=(5, 5), sticky='ew')
 min_subjectivity_label = tk.Label(subjectivity_frame, text="Min Subjectivity (0 to 1):")
 min_subjectivity_label.grid(row=0, column=0, padx=5, pady=2, sticky='e')
 min_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
-min_subjectivity_entry.grid(row=0, column=1, padx=5, pady=2, sticky='w')
+min_subjectivity_entry.grid(row=0, column=1, padx=5, pady=2, sticky='e')
 
 max_subjectivity_label = tk.Label(subjectivity_frame, text="Max Subjectivity (0 to 1):")
 max_subjectivity_label.grid(row=1, column=0, padx=5, pady=2, sticky='e')
 max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
-max_subjectivity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w')
+max_subjectivity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='e')
 subjectivity_frame.grid(row=7, column=0, columnspan=2, pady=(1, 1))
 
 # Define a smaller font for explanations
@@ -540,6 +548,11 @@ polarity_explanation.grid(row=9, column=1, padx=1, pady=1, sticky='w')
 # Create a button to apply filters
 filter_button = tk.Button(left_frame, text="Apply Filters", command=apply_filters)
 filter_button.grid(row=11, column=0, columnspan=2, pady=1)
+
+# Label and entry for number of review pages
+tk.Label(left_frame, text="Number of Review Pages:").grid(row=6, column=0, pady=5, sticky="e")
+review_pages_entry = tk.Entry(left_frame, width=10)
+review_pages_entry.grid(row=6, column=1, padx=1, pady=5, sticky="w")
 
 # Create an explanation for the word cloud feature
 wordcloud_frame = tk.Frame(right_frame)
