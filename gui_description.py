@@ -485,7 +485,7 @@ app.grid_columnconfigure(1, weight=1, uniform="group1")
 app.grid_rowconfigure(0, weight=1)
 
 # Populate the left frame
-tk.Label(left_frame, text="Keyword:").grid(row=0, column=0, padx=110, pady=20, sticky="w")
+tk.Label(left_frame, text="Keyword / ASIN:").grid(row=0, column=0, padx=110, pady=20, sticky="w")
 keyword_entry = tk.Entry(left_frame)
 keyword_entry.grid(row=0, column=1, pady=20, sticky="w")
 
