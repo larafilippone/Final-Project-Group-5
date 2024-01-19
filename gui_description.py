@@ -619,7 +619,7 @@ polarity_explanation.grid(row=4, column=1, padx=1, pady=1, sticky='w')
 
 # Create a button to apply filters
 filter_button = tk.Button(right_frame, text="Apply Filters", command=apply_filters)
-filter_button.grid(row=5, column=0, columnspan=2, pady=1, padx=310, sticky="w")
+filter_button.grid(row=5, column=0, columnspan=2, pady=1, padx=15, sticky="w")
 
 # Canvas for displaying the polarity light
 polarity_canvas = tk.Canvas(right_frame, width=40, height=40, bg="white")
