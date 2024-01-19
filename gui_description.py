@@ -464,7 +464,7 @@ app.geometry("3024x1964")
 
 sf_pro_font = tkFont.Font(family="SF Pro", size=12, weight=tkFont.NORMAL)
 
-# Create frames for the left and right sides
+# Create frames for the left and right sides 
 left_frame = tk.Frame(app, borderwidth=0, relief="flat")
 right_frame = tk.Frame(app, borderwidth=0, relief="flat")
 
@@ -478,7 +478,6 @@ left_frame.grid_columnconfigure(1, weight=1)
 # Configure the grid to have equal column widths
 right_frame.grid_columnconfigure(0, weight=1)
 right_frame.grid_columnconfigure(1, weight=1)
-
 
 # Configure the grid
 app.grid_columnconfigure(0, weight=1, uniform="group1")
@@ -509,6 +508,9 @@ search_param_dropdown.grid(row=1, column=1, pady=5, sticky="w")
 num_pages_entry = tk.Entry(left_frame, width=5)
 num_pages_entry.grid(row=2, column=1, pady=5, sticky="w")
 
+# Set default value to 1
+num_pages_entry.insert(0, "1")
+
 # Create button to start the search
 search_button = tk.Button(left_frame, text="Search Amazon", command=lambda: update_treeview(keyword_entry.get(), value_to_key(search_param_var.get()), int(num_pages_entry.get())))
 search_button.grid(row=3, column=0, columnspan=2, padx=300, pady=20, sticky="w")
@@ -529,7 +531,7 @@ def value_to_key(search_value: str) -> Optional[str]:
             return key
     return None  # Return None if the value is not found
 
-# Treeview for displaying product list
+# Treeview to display the product list - the search result 
 products_tree = ttk.Treeview(left_frame, columns=("Number", "Product Name", "ASIN"), show="headings")
 products_tree.heading("Number", text="Number")
 products_tree.heading("Product Name", text="Product Name")
@@ -541,10 +543,10 @@ products_tree.column("Number", width=100, anchor='center')
 products_tree.column("Product Name", width=445, anchor='w')
 products_tree.column("ASIN", width=140, anchor='w')
 
-# Bind the on_select function to the Treeview's selection event
+# Bind the on_select function to the Treeview's selection event - when a product is actually selected 
 products_tree.bind("<<TreeviewSelect>>", on_select)
 
-# Create a label for the Product Description
+# Create a label for the Product Description field
 product_text_label = tk.Label(left_frame, text="Product Description:")
 product_text_label.grid(row=5, column=0, padx=15, pady=5, sticky="w")
 
@@ -552,36 +554,29 @@ product_text_label.grid(row=5, column=0, padx=15, pady=5, sticky="w")
 product_text = tk.Text(left_frame, wrap=tk.WORD, height=8, width=85, font=sf_pro_font)  
 product_text.grid(row=6, column=0, columnspan=2, padx=15, pady=3, sticky="w")
 
-# Create a button to go to Amazon
+# Create a button to go to the selected Amazon product homepage 
 go_to_amazon_button = tk.Button(left_frame, text="Go to Amazon", command=open_amazon)
 go_to_amazon_button.grid(row=7, column=0, columnspan=2, padx=320, pady=5, sticky="w")
-
 
 # Label and entry for number of review pages
 tk.Label(right_frame, text="Number of Review Pages:").grid(row=1, column=0, pady=20, sticky="e")
 review_pages_entry = tk.Entry(right_frame, width=5)
 review_pages_entry.grid(row=1, column=1, padx=1, pady=20, sticky="w")
 
+# Set default value to 1
+review_pages_entry.insert(0, "1")
+
 # Create a button that, when clicked, will start the scraping process
 scrape_button = tk.Button(right_frame, text="Scrape Reviews", command=start_scraping_thread, state=tk.DISABLED)
 scrape_button.grid(row=1, column=1, padx=106, pady=20, sticky="w")
 
-# Create a scrolled text area where the scraped review data will be displayed
+# Create a text area where the scraped review data will be displayed
 text_area = tk.Text(right_frame, wrap=tk.WORD, width=85, height=10, font=sf_pro_font)
-#product_text = tk.Text(left_frame, wrap=tk.WORD, height=10, width=115, font=sf_pro_font)  
 text_area.grid(row=2, column=0, columnspan=2, padx=15, pady=3, sticky="w")
-
-# Canvas for displaying the polarity light
-polarity_canvas = tk.Canvas(right_frame, width=40, height=40, bg="white")
-polarity_canvas.grid(row=3, column=0, columnspan=2, padx=350, pady=10, sticky="w")
-
-# Label for displaying average polarity
-polarity_label = tk.Label(right_frame, text="Average Polarity Score: ", font=("Helvetica", 9))
-polarity_label.grid(row=3, column=0, columnspan=2, padx=200, pady=10, sticky="w")
 
 # Frame for the subjectivity filters
 subjectivity_frame = tk.Frame(right_frame)
-subjectivity_frame.grid(row=4, column=0, columnspan=1, pady=(5, 5), sticky='ew')
+subjectivity_frame.grid(row=3, column=0, columnspan=1, pady=(5, 5), sticky='ew')
 min_subjectivity_label = tk.Label(subjectivity_frame, text="Min Subjectivity (0 to 1):", font=tkFont.Font(size=9))
 min_subjectivity_label.grid(row=0, column=0, padx=20, pady=2, sticky='w')
 min_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
@@ -598,11 +593,11 @@ subjectivity_explanation_text = (
     "and ranges from 0 (completely objective) to 1 (completely subjective)."
 )
 subjectivity_explanation = tk.Label(right_frame, text=subjectivity_explanation_text, font=tkFont.Font(size=9), justify="left")
-subjectivity_explanation.grid(row=4, column=1, padx=1, pady=1, sticky='w')
+subjectivity_explanation.grid(row=3, column=1, padx=1, pady=1, sticky='w')
 
 # Frame for the polarity filters
 polarity_frame = tk.Frame(right_frame)
-polarity_frame.grid(row=5, column=0, columnspan=1, pady=(5, 5), sticky='ew')
+polarity_frame.grid(row=4, column=0, columnspan=1, pady=(5, 5), sticky='ew')
 min_polarity_label = tk.Label(polarity_frame, text="Min Polarity (-1 to 1):", font=tkFont.Font(size=9))
 min_polarity_label.grid(row=0, column=0, padx=20, pady=2, sticky='w')
 min_polarity_entry = tk.Entry(polarity_frame, width=5)
@@ -620,13 +615,21 @@ polarity_explanation_text = (
     "and ranges from -1 (extremely negative) to 1 (extremely positive)."
 )
 polarity_explanation = tk.Label(right_frame, text=polarity_explanation_text, font=tkFont.Font(size=9), justify="left")
-polarity_explanation.grid(row=5, column=1, padx=1, pady=1, sticky='w')
+polarity_explanation.grid(row=4, column=1, padx=1, pady=1, sticky='w')
 
 # Create a button to apply filters
 filter_button = tk.Button(right_frame, text="Apply Filters", command=apply_filters)
-filter_button.grid(row=6, column=0, columnspan=2, pady=1, padx=310, sticky="w")
+filter_button.grid(row=5, column=0, columnspan=2, pady=1, padx=310, sticky="w")
 
-# Create a label for the Review Summary
+# Canvas for displaying the polarity light
+polarity_canvas = tk.Canvas(right_frame, width=40, height=40, bg="white")
+polarity_canvas.grid(row=6, column=0, columnspan=2, padx=350, pady=10, sticky="w")
+
+# Label for displaying average polarity
+polarity_label = tk.Label(right_frame, text="Average Polarity Score: ", font=("Helvetica", 9))
+polarity_label.grid(row=6, column=0, columnspan=2, padx=200, pady=10, sticky="w")
+
+# Create a label for the Review Summary text field 
 review_summary_label = tk.Label(right_frame, text="Review Summary:")
 review_summary_label.grid(row=7, column=0, padx=20, pady=5, sticky="w")
 
@@ -634,7 +637,7 @@ review_summary_label.grid(row=7, column=0, padx=20, pady=5, sticky="w")
 review_summary_text = tk.Text(right_frame, wrap=tk.WORD, width=85, height=8, font=sf_pro_font) 
 review_summary_text.grid(row=8, column=0, columnspan=2, padx=15, pady=3, sticky="w")
 
-# Create a label for Product Improvement Suggestions
+# Create a label for Product Improvement Suggestions text field 
 product_improvement_label = tk.Label(right_frame, text="Product Improvement Suggestions:")
 product_improvement_label.grid(row=9, column=0, padx=20, pady=5, sticky="w")
 
