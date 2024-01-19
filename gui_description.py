@@ -567,7 +567,7 @@ review_pages_entry.grid(row=1, column=1, padx=1, pady=20, sticky="w")
 review_pages_entry.insert(0, "1")
 
 # Create a button that, when clicked, will start the scraping process
-scrape_button = tk.Button(right_frame, text="Scrape Reviews", command=start_scraping_thread, state=tk.DISABLED)
+scrape_button = tk.Button(right_frame, text="Scrape Reviews and Analyse", command=start_scraping_thread, state=tk.DISABLED)
 scrape_button.grid(row=1, column=1, padx=106, pady=20, sticky="w")
 
 # Create a text area where the scraped review data will be displayed
