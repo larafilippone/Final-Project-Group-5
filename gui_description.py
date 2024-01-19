@@ -273,6 +273,7 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
     product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
     product_improvement_text.insert(tk.INSERT, f"Generating product improvement suggestions...")
     response_chatgpt = ask_chatgpt(request_summary)
+    review_summary_text.delete("1.0", tk.END)  # Delete all existing content
     review_summary_text.insert(tk.INSERT, response_chatgpt)
 
     # Generate and display product improvement suggestions 
@@ -281,6 +282,7 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
     # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
     request_summary = request_summary[:4000]
     response_chatgpt = ask_chatgpt(request_summary)
+    product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
     product_improvement_text.insert(tk.INSERT, response_chatgpt)
 
 # Create function to calculate average polarity score and output corresponding color
