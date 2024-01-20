@@ -4,7 +4,6 @@ from product_search import get_amazon_product_data
 from chatgpt import ask_chatgpt
 import tkinter as tk
 from tkinter import ttk
-from tkinter import scrolledtext
 import threading
 import tkinter.font as tkFont
 import os
@@ -65,71 +64,22 @@ def is_valid_asin(asin: str) -> bool:
     """
     return len(asin) == 10 and asin.isalnum()
 
-# Create a function to save scraped data to CSV file
-def save_to_csv(data: List[Dict], filename: str) -> None:
+# Create a function to scrape new data
+def scrape_data(product_id: str, num_review_pages: int) -> List[Dict]:
     """
-    Saves the scraped review data to a CSV file.
-
-    This function takes the scraped data, which is a list of dictionaries where each dictionary represents a review,
-    and converts it into a pandas DataFrame. It then saves this DataFrame to a CSV file with the specified filename.
-    The index of the DataFrame is not included in the CSV file. After saving, a confirmation message is printed.
-
-    Arguments:
-    data (list of dict): the scraped review data, where each review is represented as a dictionary.
-    filename (str): the name of the file to which the data will be saved. The file will be saved in the current
-                    working directory unless a different path is specified in the filename.
-
-    Returns:
-    None: this function does not return any value but saves data to a CSV file and prints a confirmation message.
-    """
-    df = pd.DataFrame(data)
-    df.to_csv(filename, index=False)
-    print(f"Data saved to {filename}")
-
-# Create a function to load data from CSV file into a pandas DataFrame
-def load_from_csv(filename: str) -> pd.DataFrame:
-    """
-    Loads data from a CSV file into a pandas DataFrame.
-
-    This function reads a CSV file specified by the filename and loads its contents into a pandas DataFrame. 
-    It assumes that the CSV file is properly formatted and that the first row contains the header names for the columns. 
-    The function is primarily used to load scraped review data that has been previously saved to a CSV file.
-
-    Arguments:
-    filename (str): the name of the CSV file to be loaded. The file should be in the current working directory 
-                    or include the full path.
-
-    Returns:
-    pd.DataFrame: a pandas DataFrame containing the data loaded from the CSV file.
-    """
-    return pd.read_csv(filename)
-
-# Create a function to either load data from CSV file or scrape new data
-def check_and_load_or_scrape(product_id: str, num_review_pages: int) -> Tuple[List[Dict], bool]:
-    """
-    Checks if data for the given product ID is already saved, loads it if so,
-    otherwise scrapes new data from Amazon.
+    Scrapes new data from Amazon based on the given product ID and the number of review pages.
 
     Arguments:
     product_id (str): Amazon product ID.
+    num_review_pages (int): The number of review pages to scrape.
 
     Returns:
-    list: a list of dictionaries, each containing data about a review.
+    List[Dict]: a list of dictionaries, each containing data about a review.
     """
-    filename = f"{product_id}_reviews.csv"
-    if os.path.exists(filename):
-        try:
-            df = pd.read_csv(filename)
-            return df.to_dict(orient='records'), True  # Convert DataFrame to list of dictionaries
-        except Exception as e:
-            print(f"Error loading data: {e}")
-            return [], False
-    else:
-        urls = [f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}" 
-                for page in range(1, num_review_pages + 1)]
-        scraped_data = scrape_amazon_reviews(urls)
-        save_to_csv(scraped_data, filename)  # Save the scraped data
-        return scraped_data, False
+    urls = [f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}" 
+            for page in range(1, num_review_pages + 1)]
+    scraped_data = scrape_amazon_reviews(urls)
+    return scraped_data
 
 # Create a function to run the scraping process
 def run_scraping() -> None:
@@ -167,8 +117,8 @@ def run_scraping() -> None:
         scrape_button.config(state=tk.NORMAL)
         return
 
-    # Use the num_review_pages in the check_and_load_or_scrape function
-    all_results, data_loaded = check_and_load_or_scrape(product_id, num_review_pages)
+    # Use the num_review_pages in the scrape_data function
+    all_results = scrape_data(product_id, num_review_pages)
 
     # Check if there are any reviews
     if not all_results:
@@ -428,10 +378,10 @@ def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
     Arguments:
     keyword (str): the search keyword inserted by the user.
     search_param (str): the search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage.
-    num_pages (int): the number of pages to scrape (default is 1 to not pulling to many requests and get blocked).
+    num_pages (int): the number of pages to scrape.
 
     Returns:
-    None: creates treeview table and saves results in the csv file "amazon_product_data.csv".
+    None: creates treeview table with the search results.
     """
     global product_df
 
@@ -450,9 +400,6 @@ def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
         # Insert data into Treeview
         for i, row in product_df.iterrows():
             products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["ASIN"]))
-
-        # Save DataFrame to CSV
-        product_df.to_csv('amazon_product_data.csv', index=False)
 
 def open_amazon():
     webbrowser.open_new(product_url)
