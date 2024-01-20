@@ -460,7 +460,21 @@ def open_amazon():
 # Initialize the main application window using Tkinter
 app = tk.Tk()
 app.title("Amazon Review Analyzer")  
-app.geometry("3024x1964")
+
+# Get the laptop screen width and height
+screen_width = app.winfo_screenwidth()
+screen_height = app.winfo_screenheight()
+
+# Calculate the application window size
+app_width = int(screen_width)
+app_height = int(screen_height)
+
+# Center the application window on the screen
+x_position = int((screen_width - app_width) / 2)
+y_position = int((screen_height - app_height) / 2)
+
+# Set the geometry of the application window
+app.geometry(f"{app_width}x{app_height}+{x_position}+{y_position}")
 
 sf_pro_font = tkFont.Font(family="SF Pro", size=12, weight=tkFont.NORMAL)
 
