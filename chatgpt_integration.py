@@ -5,6 +5,7 @@ It includes functions to send requests and process responses from the ChatGPT se
 
 import openai
 
+
 # Create a function to access the OpenAI API and return the answer from Chat GPT
 def ask_chatgpt(question_to_chatgpt: str) -> str:
     """

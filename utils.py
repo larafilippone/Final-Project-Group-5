@@ -3,7 +3,9 @@ utils.py: A collection of general utility functions used across the application.
 """
 
 import webbrowser
+
 from config import SEARCH_PARAMS
+
 
 # Create a function to check if the given product ID is valid
 def is_valid_asin(asin: str) -> bool:

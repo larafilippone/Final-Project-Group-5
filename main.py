@@ -3,18 +3,19 @@ main.py: This script serves as the entry point of the Amazon Review Analyzer app
 It contains the main GUI setup using Tkinter, event handling, and orchestration of various components.
 """
 
-import tkinter as tk
-from tkinter import ttk
 import threading
+import tkinter as tk
 import tkinter.font as tkFont
-import pandas as pd
-from typing import List, Dict
+from tkinter import ttk
+from typing import Dict, List
 
-from scraping_utils import scrape_data, scrape_amazon_product_description, get_amazon_product_data
-from data_analysis import get_polarity_color, display_wordcloud
+import pandas as pd
+
 from chatgpt_integration import ask_chatgpt
-from utils import is_valid_asin, open_amazon, value_to_key
 from config import SEARCH_PARAMS
+from data_analysis import display_wordcloud, get_polarity_color
+from scraping_utils import get_amazon_product_data, scrape_amazon_product_description, scrape_data
+from utils import is_valid_asin, open_amazon, value_to_key
 
 # Initialize global variables
 all_results = []

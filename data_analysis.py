@@ -2,12 +2,14 @@
 data_analysis.py: Provides functionalities for analyzing and visualizing data extracted from Amazon reviews. 
 """
 
-from wordcloud import WordCloud
+from typing import Any, Dict, List, Tuple
+
 import matplotlib.pyplot as plt
-from typing import List, Dict, Tuple, Any
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from textblob import TextBlob
+from wordcloud import WordCloud
+
 
 # Create a function to perform sentiment analysis
 def analyze_sentiment_with_textblob(text: str):

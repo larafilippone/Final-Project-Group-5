@@ -2,15 +2,16 @@
 scraping_utils.py: Contains functions and utilities for scraping data from Amazon.
 """
 
+import logging
 import random
+import re
+from typing import Dict, List, Optional
+
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from typing import Optional
-import logging
-import pandas as pd
-import re
-from typing import List, Dict
-from config import USER_AGENTS, HEADERS
+
+from config import HEADERS, USER_AGENTS
 from data_analysis import analyze_sentiment_with_textblob
 
 # Initialize global variables
