@@ -28,6 +28,7 @@ SEARCH_PARAMS = {
     "fashion-womens-intl-ship": "Women's Fashion"
 }
 
+# List of different user agents to alternate, to avoid being detected for scraping
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
@@ -41,6 +42,7 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 OPR/76.0.4017.177",
     ]
 
+# Dictionary to simulate the headers that a web browser would send with its HTTP requests
 HEADERS = {
             "authority": "www.amazon.com",
             "pragma": "no-cache",
