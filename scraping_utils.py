@@ -303,11 +303,12 @@ def scrape_amazon_product_description(product_url: str) -> Optional[str]:
     Returns:
     description_text (str): a string containing the product description 
     """
-    # Randomly choose a user agent
-    user_agent = random.choice(USER_AGENTS)
-    # Error handling for the HTML request
     try:
-        response = requests.get(product_url, headers=HEADERS)
+        # Randomly choose a user agent and update the headers
+        user_agent = random.choice(USER_AGENTS)
+        headers = {**HEADERS, "user-agent": user_agent}
+
+        response = requests.get(product_url, headers=headers)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             # Version 1 find content between <div id="feature-bullets" class="a-section a-spacing-medium a-spacing-top-small"> and </div>
