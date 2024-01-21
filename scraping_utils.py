@@ -15,6 +15,7 @@ product_df = pd.DataFrame()
 product_id = None
 product_url = ""
 
+# Create a function to retrieve the HTML code of a web page
 def get_page_html(page_url: str) -> str:
     """
     Makes a request to a given URL and returns the HTML content of the page.
@@ -40,7 +41,7 @@ def get_page_html(page_url: str) -> str:
         logging.error(f"Request error: {e}")
         return ""  # Return empty string in case of an error
 
-
+# Create a function to retrieve review elements from HTML code
 def get_reviews_from_html(page_html: str) -> list:
     """
     Parses HTML content and extracts review elements.
@@ -64,7 +65,7 @@ def get_reviews_from_html(page_html: str) -> list:
     
     return reviews
 
-
+# Create a function to retrieve the review date
 def get_review_date(soup_object: BeautifulSoup) -> str:
     """
     Extracts the review date from a BeautifulSoup object representing a single review.
@@ -78,7 +79,7 @@ def get_review_date(soup_object: BeautifulSoup) -> str:
     date_string = soup_object.find("span", {"class": "review-date"}).get_text()
     return date_string
 
-
+# Create a function to retrieve the review text
 def get_review_text(soup_object: BeautifulSoup) -> str:
     """
     Extracts the review text from a BeautifulSoup object representing a single review.
@@ -99,6 +100,7 @@ def get_review_text(soup_object: BeautifulSoup) -> str:
     
     return review_text.get_text().strip() if review_text else "No review text"
 
+# Create a function to retrieve the review title
 def get_review_header(soup_object: BeautifulSoup) -> str:
     """
     Extracts the review title (header) from a BeautifulSoup object representing a single review.
@@ -119,7 +121,7 @@ def get_review_header(soup_object: BeautifulSoup) -> str:
     
     return review_header.get_text().strip() if review_header else "No title"
 
-
+# Create a function to retrieve the review rating
 def get_number_stars(soup_object: BeautifulSoup) -> str:
     """
     Extracts the number of stars (rating) given in a single review.
@@ -137,6 +139,7 @@ def get_number_stars(soup_object: BeautifulSoup) -> str:
     else:
         return "No rating"
 
+# Create a function to perform sentiment analysis
 def analyze_sentiment_with_textblob(text: str):
     """
     Analyzes the sentiment of the given text using TextBlob.
@@ -150,6 +153,7 @@ def analyze_sentiment_with_textblob(text: str):
     testimonial = TextBlob(text)
     return testimonial.sentiment
 
+# Create a function to orchestrate the data gathering process and sentiment analysis performance
 def orchestrate_data_gathering(single_review: BeautifulSoup) -> dict:
     """
     Orchestrates the extraction of data from a single review and performs sentiment analysis.
@@ -172,7 +176,7 @@ def orchestrate_data_gathering(single_review: BeautifulSoup) -> dict:
         "textblob_subjectivity": textblob_sentiment.subjectivity
     }
 
-# Function definitions
+# Create a function to scrape Amazon reviews
 def scrape_amazon_reviews(urls: list) -> list:
     """
     Scrapes Amazon reviews from a list of given URLs.
@@ -193,7 +197,7 @@ def scrape_amazon_reviews(urls: list) -> list:
             all_results.append(data)
     return all_results
 
-# Create a function to scrape new data
+# Create a function to scrape new data from Amazon
 def scrape_data(product_id: str, num_review_pages: int) -> List[Dict]:
     """
     Scrapes new data from Amazon based on the given product ID and the number of review pages.
@@ -210,17 +214,18 @@ def scrape_data(product_id: str, num_review_pages: int) -> List[Dict]:
     scraped_data = scrape_amazon_reviews(urls)
     return scraped_data
 
+# Create a function to get product data from Amazon
 def get_amazon_product_data(keyword: str, search_param: str, num_pages: int=1) -> dict:
     """
     Scrapes Amazon search results for a given keyword and search parameter that is specified by the user. 
 
     Arguments:
-    - keyword (str): The search keyword inserted by the user 
-    - search_param (str): The search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
-    - num_pages (int): The number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
+    keyword (str): the search keyword inserted by the user 
+    search_param (str): the search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage  
+    num_pages (int): the number of pages to scrape (default is 1 to not pulling to many requests and get blocked) 
 
     Returns:
-    - product_data (dict): A dictionary containing scraped product data with keys 'Product Name', 'Product URL', and 'ASIN'.
+    product_data (dict): a dictionary containing scraped product data with keys 'Product Name', 'Product URL', and 'ASIN'.
     """
 
     product_data: Dict[str, List[str]] = {'Product Name': [], 'Product URL': [], 'ASIN': []}
@@ -286,6 +291,7 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int=1) -
 
     return product_data
 
+# Create a function to retrieve a product's description from Amazon
 def scrape_amazon_product_description(product_url: str) -> Optional[str]:
     """
     Function scrapes the product url to retrieve the product description. The html pages of Amazon categories are very differently structured.
@@ -388,4 +394,3 @@ def scrape_amazon_product_description(product_url: str) -> Optional[str]:
 
     # Return None if any error occurs during the scraping process
     return None
-
