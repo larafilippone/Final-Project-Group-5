@@ -8,7 +8,7 @@ from typing import List, Dict
 from scraping_utils import scrape_data, scrape_amazon_product_description, get_amazon_product_data
 from data_analysis import get_polarity_color, display_wordcloud
 from chatgpt_integration import ask_chatgpt
-from utils import is_valid_asin, open_amazon
+from utils import is_valid_asin, open_amazon, value_to_key
 from config import SEARCH_PARAMS
 
 # Initialize global variables
@@ -19,6 +19,21 @@ product_url = ""
 
 # Function definitions
 def display_review(review):
+    """
+    Displays a single review in the text area of the GUI.
+
+    This function formats the details of a review and appends it to the text area widget 
+    for display. It includes the title, rating, date, polarity, subjectivity, and the review 
+    text itself. Each review is separated by a line of dashes for clarity.
+
+    Arguments:
+    review (dict): a dictionary containing the details of a review. Expected keys are 
+                   'review_title', 'review_stars', 'review_date', 'textblob_polarity', 
+                   'textblob_subjectivity', and 'review_text'.
+
+    Returns:
+    None: this function does not return a value but updates the GUI directly.
+    """
     display_text = (
         f"Title: {review['review_title']}\n"
         f"Rating: {review['review_stars']}\n"
@@ -59,7 +74,19 @@ def apply_filters() -> None:
         for review in filtered_reviews[:10]:  # Display up to 10 of the filtered reviews
             display_review(review)
 
+# Create function to display average polarity and corresponding color
 def display_average_polarity_and_color():
+    """
+    This function computes the average polarity of all reviews and displays it on the GUI. It also
+    shows a colored circle: red for negative sentiment, green for positive, and orange for neutral.
+    If there are no reviews to analyze, it updates the GUI to indicate that no average can be calculated.
+
+    Arguments:
+    None: this function uses the global variable 'all_results' to access the review data.
+
+    Returns:
+    None: this function does not return any value but updates the GUI directly.
+    """
     if all_results:
         average_polarity, color = get_polarity_color(all_results)
         polarity_text = f"Average Polarity Score: {average_polarity:.2f}"
@@ -116,7 +143,20 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
     product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
     product_improvement_text.insert(tk.INSERT, response_chatgpt)
 
+# Create function to select a single product from the treeview widget
 def on_select(event):
+    """
+    Handles the selection of a product from the products_tree Treeview widget. When a product is selected,
+    this function retrieves the selected product's ASIN and URL, and then attempts to scrape the product's
+    description from Amazon. The scraped description (or a message indicating the absence of a description)
+    is then displayed in the product_text Text widget. It also enables the scrape button.
+
+    Arguments:
+    event: the event that triggered this function, passed automatically by the Tkinter event handler.
+
+    Returns:
+    None: this function does not return any value but updates the GUI elements and global variables.
+    """
     global product_id, product_url
 
     selected_items = products_tree.selection()
@@ -136,7 +176,22 @@ def on_select(event):
         
         scrape_button.config(state=tk.NORMAL)
 
+# Create function to update the treeview widget
 def update_treeview(keyword, search_param, num_pages):
+    """
+    Updates the Treeview widget (products_tree) with product data based on the specified search parameters.
+    It creates a DataFrame to hold the product data, fetches data from Amazon using the 
+    get_amazon_product_data function, and then populates the Treeview with this data. Each row in the 
+    Treeview represents a product, showing its number, name, and ASIN.
+
+    Arguments:
+    keyword (str): the search keyword entered by the user.
+    search_param (str): the search parameter/category selected by the user.
+    num_pages (int): the number of pages to scrape for product data.
+
+    Returns:
+    None: this function does not return any value but updates the products_tree Treeview and the global variable.
+    """
     global product_df
 
     product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
@@ -150,7 +205,26 @@ def update_treeview(keyword, search_param, num_pages):
         for i, row in product_df.iterrows():
             products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["ASIN"]))
 
+# Create a function to run the scraping process
 def run_scraping():
+    """
+    Manages the process of scraping reviews for a specified product ID. It validates the product ID, 
+    retrieves the number of review pages to scrape, calls the scrape_data function to scrape reviews,
+    and updates the GUI with the scraped reviews. 
+
+    The function disables the scrape button during the scraping process to prevent concurrent scraping,
+    and re-enables it upon completion. It also updates the global variable 'all_results' with the 
+    scraped reviews.
+
+    If no valid product ID is provided, or there are no reviews for the product, or an error occurs during scraping,
+    the function updates the text area in the GUI with an appropriate message.
+
+    Arguments:
+    None: this function relies on global variables and GUI components (like product_id and review_pages_entry).
+
+    Returns:
+    None: this function does not return any value but updates the GUI and global variables.
+    """
     global all_results, product_id
 
     # Disable the scrape button to prevent concurrent scraping
@@ -183,15 +257,23 @@ def run_scraping():
 
     scrape_button.config(state=tk.NORMAL)
 
+# Create function to start a separate thread
 def start_scraping_thread():
+    """
+    Initiates the review scraping process in a separate thread. This function creates a new thread 
+    targeting the 'run_scraping' function, which handles the scraping of Amazon product reviews. 
+
+    The use of threading prevents the GUI from becoming unresponsive during the scraping process, 
+    allowing the main application thread to continue running and managing user interactions.
+
+    Arguments:
+    None: this function does not take any arguments.
+
+    Returns:
+    None: this function does not return any value. It starts a new thread for the scraping process.
+    """
     scraping_thread = threading.Thread(target=run_scraping)
     scraping_thread.start()
-
-def value_to_key(search_value):
-    for key, value in SEARCH_PARAMS.items():
-        if value == search_value:
-            return key
-    return None
 
 # Initialize the main application window using Tkinter
 app = tk.Tk()
@@ -345,7 +427,6 @@ max_polarity_label = tk.Label(polarity_frame, text="Max Polarity (-1 to 1):", fo
 max_polarity_label.grid(row=1, column=0, padx=20, pady=2, sticky='w')
 max_polarity_entry = tk.Entry(polarity_frame, width=5)
 max_polarity_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w')
-
 
 # Polarity explanation
 polarity_explanation_text = (
