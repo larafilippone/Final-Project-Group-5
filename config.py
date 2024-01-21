@@ -4,7 +4,7 @@ config.py: Contains configuration settings and constants used throughout the app
 
 import random
 
-# Dictionary mapping search_param options to corresponding categories on the Amazon website 
+# Dictionary mapping search_param options to corresponding categories on the Amazon website
 SEARCH_PARAMS = {
     " ": "All",
     "arts-crafts-intl-ship": "Arts & Crafts",
@@ -29,7 +29,7 @@ SEARCH_PARAMS = {
     "tools-intl-ship": "Tools & Home Improvement",
     "toys-and-games-intl-ship": "Toys & Games",
     "videogames-intl-ship": "Video Games",
-    "fashion-womens-intl-ship": "Women's Fashion"
+    "fashion-womens-intl-ship": "Women's Fashion",
 }
 
 # List of different user agents to alternate, to avoid being detected for scraping
@@ -44,19 +44,19 @@ USER_AGENTS = [
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.48",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 OPR/76.0.4017.177",
-    ]
+]
 
 # Dictionary to simulate the headers that a web browser would send with its HTTP requests
 HEADERS = {
-            "authority": "www.amazon.com",
-            "pragma": "no-cache",
-            "cache-control": "no-cache",
-            "dnt": "1",
-            "upgrade-insecure-requests": "1",
-            "user-agent": random.choice(USER_AGENTS),
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "sec-fetch-site": "none",
-            "sec-fetch-mode": "navigate",
-            "sec-fetch-dest": "document",
-            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-        }
+    "authority": "www.amazon.com",
+    "pragma": "no-cache",
+    "cache-control": "no-cache",
+    "dnt": "1",
+    "upgrade-insecure-requests": "1",
+    "user-agent": random.choice(USER_AGENTS),
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "sec-fetch-site": "none",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-dest": "document",
+    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+}
