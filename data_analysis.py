@@ -4,11 +4,11 @@ data_analysis.py: Provides functionalities for analyzing and visualizing data ex
 
 from typing import Any, Dict, List, Tuple
 
-import matplotlib.pyplot as plt
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from textblob import TextBlob
-from wordcloud import WordCloud
+
 
 
 # Create a function to perform sentiment analysis
@@ -81,28 +81,4 @@ def generate_filtered_text(all_results):
     return " ".join(word for word in words if word.lower() not in stop_words and word.isalpha())
 
 
-# Create a function to display the word cloud
-def display_wordcloud(all_results):
-    """
-    Generates and displays a word cloud from the scraped reviews, visualizing the frequency of words used in the reviews.
 
-    Arguments:
-    all_results (List[Dict[str, Any]]): a list of dictionaries where each dictionary contains the data of a review.
-                                        Each dictionary should have a key 'review_text' containing the text of the review.
-
-    Returns:
-    None: this function does not return any value. It directly displays the word cloud image or prints a message if there are no words to display.
-    """
-    filtered_text = generate_filtered_text(all_results)
-
-    if not filtered_text:
-        print("No words left after filtering for the word cloud.")
-        return
-
-    # Generate the word cloud image
-    wordcloud = WordCloud(width=800, height=800, background_color="white").generate(filtered_text)
-
-    # Convert to an image and display in Tkinter
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.show()

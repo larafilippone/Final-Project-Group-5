@@ -3,9 +3,8 @@ data_analysis_test.py: This script is for testing the functions contained in dat
 """
 
 import unittest
-from unittest.mock import patch
 
-from data_analysis import analyze_sentiment_with_textblob, display_wordcloud, generate_filtered_text, get_polarity_color
+from data_analysis import analyze_sentiment_with_textblob, generate_filtered_text, get_polarity_color
 
 
 # Tests for analyze_sentiment_with_textblob
@@ -85,23 +84,7 @@ class TestGenerateFilteredText(unittest.TestCase):
         self.assertEqual(generate_filtered_text(test_data), expected_result)
 
 
-# Tests for display_wordcloud
-class TestDisplayWordcloud(unittest.TestCase):
-    @patch("data_analysis.WordCloud")
-    @patch("data_analysis.plt")
-    def test_wordcloud_display(self, mock_plt, mock_wordcloud):
-        test_data = [{"review_text": "Nice review text with actual words."}]
-        display_wordcloud(test_data)
-        mock_wordcloud.assert_called_once()
-        mock_plt.imshow.assert_called()
-        mock_plt.axis.assert_called_with("off")
-        mock_plt.show.assert_called_once()
 
-    @patch("data_analysis.print")
-    def test_no_words_to_display(self, mock_print):
-        test_data = [{"review_text": "the and in of"}]
-        display_wordcloud(test_data)
-        mock_print.assert_called_with("No words left after filtering for the word cloud.")
 
 
 if __name__ == "__main__":
