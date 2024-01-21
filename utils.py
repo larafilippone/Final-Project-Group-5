@@ -14,9 +14,22 @@ def is_valid_asin(asin: str) -> bool:
     """
     return len(asin) == 10 and asin.isalnum()
 
+# Create a function to redirect the user to the product web page
 def open_amazon(product_url):
+    """
+    Opens a new web browser window or tab and navigates to the given product URL. This function 
+    leverages the `webbrowser` module in Python to launch the default web browser and load the 
+    specified Amazon product page.
+
+    Arguments:
+    product_url (str): the URL of the Amazon product page to be opened in the web browser.
+
+    Returns:
+    None: this function does not return any value. It performs an action to open a web browser window or tab.
+    """
     webbrowser.open_new(product_url)
 
+# Create a function to return the key corresponding to the given value (Amazon category)
 def value_to_key(search_value):
     """
     The function iterates through the SEARCH_PARAMS dictionary, compares each value with 
