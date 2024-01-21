@@ -1,3 +1,7 @@
+"""
+data_analysis.py: Provides functionalities for analyzing and visualizing data extracted from Amazon reviews. 
+"""
+
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from typing import List, Dict, Tuple, Any

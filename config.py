@@ -1,3 +1,7 @@
+"""
+config.py: Contains configuration settings and constants used throughout the application.
+"""
+
 import random
 
 # Dictionary mapping search_param options to corresponding categories on the Amazon website 

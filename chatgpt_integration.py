@@ -1,3 +1,8 @@
+"""
+chatgpt_integration.py: This script manages the integration with the ChatGPT API. 
+It includes functions to send requests and process responses from the ChatGPT service for generating summaries and suggestions.
+"""
+
 import openai
 
 # Create a function to access the OpenAI API and return the answer from Chat GPT

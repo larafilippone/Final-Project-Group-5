@@ -1,3 +1,7 @@
+"""
+scraping_utils.py: Contains functions and utilities for scraping data from Amazon.
+"""
+
 import random
 import requests
 from bs4 import BeautifulSoup

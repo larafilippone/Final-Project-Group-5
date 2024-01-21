@@ -1,3 +1,8 @@
+"""
+main.py: This script serves as the entry point of the Amazon Review Analyzer application. 
+It contains the main GUI setup using Tkinter, event handling, and orchestration of various components.
+"""
+
 import tkinter as tk
 from tkinter import ttk
 import threading

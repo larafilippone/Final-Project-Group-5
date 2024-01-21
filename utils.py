@@ -1,3 +1,7 @@
+"""
+utils.py: A collection of general utility functions used across the application. 
+"""
+
 import webbrowser
 from config import SEARCH_PARAMS
 
