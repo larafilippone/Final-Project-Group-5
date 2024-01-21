@@ -55,30 +55,45 @@ def get_polarity_color(reviews: List[Dict[str, Any]]) -> Tuple[float, str]:
     return average_polarity, color
 
 
-# Create a function to display a word cloud
-def display_wordcloud(all_results: List[Dict[str, Any]]) -> None:
+# Create a function to preprocess text for the word cloud
+def generate_filtered_text(all_results):
     """
-    Generates and displays a word cloud from the scraped reviews, excluding common stopwords.
+    Processes a collection of reviews to generate a single string of text, suitable for generating a word cloud.
+    This function tokenizes the review texts, filters out common English stopwords, and concatenates the remaining words into a single string.
+    Only words that are purely alphabetical are retained, so that the final string does not contain numbers or special characters.
 
     Arguments:
-    None: this function uses global variable all_results.
+    all_results (List[Dict[str, Any]]): a list of dictionaries where each dictionary contains the data of a review.
+                                        Each dictionary should have a key 'review_text' containing the text of the review.
 
     Returns:
-    None: this function updates the GUI with the word cloud image.
+    str: a single string that concatenates all the filtered words from the reviews. Returns an empty string if 'all_results' is empty or if no words are left after filtering.
     """
     if not all_results:
-        print("No reviews to display in the word cloud.")
-        return
-
-    # NLTK Stop words
-    stop_words = set(stopwords.words("english"))
+        return ""
 
     # Combine all review texts into a single string
     text = " ".join(review["review_text"] for review in all_results)
 
     # Tokenize the text and remove stopwords
     words = word_tokenize(text)
-    filtered_text = " ".join(word for word in words if word.lower() not in stop_words and word.isalpha())
+    stop_words = set(stopwords.words("english"))
+    return " ".join(word for word in words if word.lower() not in stop_words and word.isalpha())
+
+
+# Create a function to display the word cloud
+def display_wordcloud(all_results):
+    """
+    Generates and displays a word cloud from the scraped reviews, visualizing the frequency of words used in the reviews.
+
+    Arguments:
+    all_results (List[Dict[str, Any]]): a list of dictionaries where each dictionary contains the data of a review.
+                                        Each dictionary should have a key 'review_text' containing the text of the review.
+
+    Returns:
+    None: this function does not return any value. It directly displays the word cloud image or prints a message if there are no words to display.
+    """
+    filtered_text = generate_filtered_text(all_results)
 
     if not filtered_text:
         print("No words left after filtering for the word cloud.")
