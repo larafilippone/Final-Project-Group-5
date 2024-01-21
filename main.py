@@ -8,12 +8,14 @@ import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import ttk
 from typing import Dict, List
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 import pandas as pd
 
 from chatgpt_integration import ask_chatgpt
 from config import SEARCH_PARAMS
-from data_analysis import display_wordcloud, get_polarity_color
+from data_analysis import get_polarity_color, generate_filtered_text
 from scraping_utils import get_amazon_product_data, scrape_amazon_product_description, scrape_data
 from utils import is_valid_asin, open_amazon, value_to_key
 
@@ -154,6 +156,32 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
     product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
     product_improvement_text.insert(tk.INSERT, response_chatgpt)
 
+
+# Create a function to display the word cloud
+def display_wordcloud(all_results):
+    """
+    Generates and displays a word cloud from the scraped reviews, visualizing the frequency of words used in the reviews.
+
+    Arguments:
+    all_results (List[Dict[str, Any]]): a list of dictionaries where each dictionary contains the data of a review.
+                                        Each dictionary should have a key 'review_text' containing the text of the review.
+
+    Returns:
+    None: this function does not return any value. It directly displays the word cloud image or prints a message if there are no words to display.
+    """
+    filtered_text = generate_filtered_text(all_results)
+
+    if not filtered_text:
+        print("No words left after filtering for the word cloud.")
+        return
+
+    # Generate the word cloud image
+    wordcloud = WordCloud(width=800, height=800, background_color="white").generate(filtered_text)
+
+    # Convert to an image and display in Tkinter
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.show()
 
 # Create function to select a single product from the treeview widget
 def on_select(event):
