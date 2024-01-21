@@ -26,12 +26,12 @@ def get_page_html(page_url: str) -> str:
     Returns:
     str: the HTML content of the page, or an empty string if an error occurs.
     """
-
-    # Randomly choose a user agent to not be blocked from scraping 
-    user_agent = random.choice(USER_AGENTS)
     try:
         # Choose a random user agent
         user_agent = random.choice(USER_AGENTS)
+        # Update the 'user-agent' in the HEADERS
+        HEADERS['user-agent'] = user_agent
+
         response = requests.get(page_url, headers=HEADERS)
         response.raise_for_status()  # Raises HTTPError for bad responses
         return response.text
