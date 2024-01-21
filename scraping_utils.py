@@ -227,24 +227,19 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int=1) -
     Returns:
     product_data (dict): a dictionary containing scraped product data with keys 'Product Name', 'Product URL', and 'ASIN'.
     """
-
     product_data: Dict[str, List[str]] = {'Product Name': [], 'Product URL': [], 'ASIN': []}
 
-    # Randomly choose a user agent to not be blocked from scraping 
-
-    user_agent = random.choice(USER_AGENTS)
-    
-    # Iterate through num_pages of the Amazon pages with the search results (using url parameter search)
-
+    # Iterate through num_pages of the Amazon pages with the search results
     for page in range(1, num_pages + 1):
-        # Using the URL with parameter search of Amazon itself 
         base_url = f'https://www.amazon.com/s?k={keyword}&i={search_param}&page={page}'
-        user_agent = random.choice(USER_AGENTS)
+        
         try:
+            # Randomly choose a user agent and update the headers
+            user_agent = random.choice(USER_AGENTS)
+            headers = {**HEADERS, "user-agent": user_agent}
 
             # Retrieves the html content of the base_url 
-            response = requests.get(base_url, headers=HEADERS)
-
+            response = requests.get(base_url, headers=headers)
 
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
