@@ -7,6 +7,21 @@ import matplotlib.pyplot as plt
 from typing import List, Dict, Tuple, Any
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from textblob import TextBlob
+
+# Create a function to perform sentiment analysis
+def analyze_sentiment_with_textblob(text: str):
+    """
+    Analyzes the sentiment of the given text using TextBlob.
+
+    Args:
+    text (str): the text to analyze.
+
+    Returns:
+    Sentiment: the sentiment analysis result, including polarity and subjectivity scores.
+    """
+    testimonial = TextBlob(text)
+    return testimonial.sentiment
 
 # Create function to calculate average polarity score and output corresponding color
 def get_polarity_color(reviews: List[Dict[str, Any]]) -> Tuple[float, str]:

@@ -8,10 +8,10 @@ from bs4 import BeautifulSoup
 from typing import Optional
 import logging
 import pandas as pd
-from textblob import TextBlob
 import re
 from typing import List, Dict
 from config import USER_AGENTS, HEADERS
+from data_analysis import analyze_sentiment_with_textblob
 
 # Initialize global variables
 all_results = []
@@ -142,20 +142,6 @@ def get_number_stars(soup_object: BeautifulSoup) -> str:
         return star_element.get_text().strip()
     else:
         return "No rating"
-
-# Create a function to perform sentiment analysis
-def analyze_sentiment_with_textblob(text: str):
-    """
-    Analyzes the sentiment of the given text using TextBlob.
-
-    Args:
-    text (str): the text to analyze.
-
-    Returns:
-    Sentiment: the sentiment analysis result, including polarity and subjectivity scores.
-    """
-    testimonial = TextBlob(text)
-    return testimonial.sentiment
 
 # Create a function to orchestrate the data gathering process and sentiment analysis performance
 def orchestrate_data_gathering(single_review: BeautifulSoup) -> dict:
