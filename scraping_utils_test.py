@@ -2,7 +2,6 @@
 scraping_utils_test.py: This script is for testing the functions contained in scraping_utils.py.
 """
 import unittest
-from bs4 import BeautifulSoup
 from unittest.mock import patch, MagicMock
 import requests
 
@@ -15,7 +14,7 @@ class TestGetPageHtml(unittest.TestCase):
     def test_successful_html_retrieval(self, mock_get):
         # Simulate a successful response
         mock_get.return_value = MagicMock(status_code=200, text="<html>Test</html>")
-        
+
         result = get_page_html("http://test.com")
         self.assertEqual(result, "<html>Test</html>")
 
@@ -59,7 +58,7 @@ class TestGetReviewsFromHtml(unittest.TestCase):
         '''
         reviews = get_reviews_from_html(mock_html)
         self.assertEqual(len(reviews), 2)
-        
+
 # Tests for get_review_date
 
 # Tests for get_review_text
@@ -77,6 +76,6 @@ class TestGetReviewsFromHtml(unittest.TestCase):
 # Tests for get_amazon_product_data
 
 # Tests for scrape_amazon_product_description
-        
+
 if __name__ == '__main__':
     unittest.main()
