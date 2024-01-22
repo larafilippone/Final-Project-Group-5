@@ -7,7 +7,7 @@ import threading
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import ttk
-from typing import Dict, List
+from typing import Dict, List, Any
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
@@ -20,14 +20,14 @@ from scraping_utils import get_amazon_product_data, scrape_amazon_product_descri
 from utils import is_valid_asin, open_amazon, value_to_key
 
 # Initialize global variables
-all_results = []
+all_results: List[Dict[str, Any]] = []
 product_df = pd.DataFrame()
-product_id = None
+product_id: str = ""
 product_url = ""
 
 
 # Function definitions
-def display_review(review):
+def display_review(review: dict) -> None:
     """
     Displays a single review in the text area of the GUI.
 
@@ -89,7 +89,7 @@ def apply_filters() -> None:
 
 
 # Create function to display average polarity and corresponding color
-def display_average_polarity_and_color():
+def display_average_polarity_and_color() -> None:
     """
     This function computes the average polarity of all reviews and displays it on the GUI. It also
     shows a colored circle: red for negative sentiment, green for positive, and orange for neutral.
@@ -135,20 +135,28 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
         )
 
     # Generate and display summary
-    request_summary = f"Summarize the negative and positive sentiment of the reviews attached. Limit to 6 bullet points.  {reviews_string}. "
-
+    request_summary = (
+        "Summarize the negative and positive sentiment of the reviews attached. "
+        "Limit to 6 bullet points. "
+        f"{reviews_string}."
+    )
     # limited length of input for Chat GPT API allowed - limit the length of the string to 4000 tokens
     request_summary = request_summary[:4000]
     review_summary_text.delete("1.0", tk.END)  # Delete all existing content
-    review_summary_text.insert(tk.INSERT, f"Generating summary of the reviews...")
+    review_summary_text.insert(tk.INSERT, "Generating summary of the reviews...")
     product_improvement_text.delete("1.0", tk.END)  # Delete all existing content
-    product_improvement_text.insert(tk.INSERT, f"Generating product improvement suggestions...")
+    product_improvement_text.insert(tk.INSERT, "Generating product improvement suggestions...")
     response_chatgpt = ask_chatgpt(request_summary)
     review_summary_text.delete("1.0", tk.END)  # Delete all existing content
     review_summary_text.insert(tk.INSERT, response_chatgpt)
 
     # Generate and display product improvement suggestions
-    request_summary = f"Please generate product improvement suggestions based on the negative points raised in the following reviews. Only display precise suggestions, no additional text. Limit to 4 suggestions. {reviews_string}. "
+    request_summary = (
+        "Please generate product improvement suggestions based on the negative points "
+        "raised in the following reviews. Only display precise suggestions, no additional "
+        "text. Limit to 4 suggestions. "
+        f"{reviews_string}."
+    )
 
     # limited lenght of input for Chat GPT API allowed - limit the lenght of the string to 4000 tokens
     request_summary = request_summary[:4000]
@@ -158,7 +166,7 @@ def display_chatgpt(all_results: List[Dict[str, str]]) -> None:
 
 
 # Create a function to display the word cloud
-def display_wordcloud(all_results):
+def display_wordcloud(all_results: List[Dict[str, Any]]) -> None:
     """
     Generates and displays a word cloud from the scraped reviews, visualizing the frequency of words used in the reviews.
 
@@ -167,7 +175,8 @@ def display_wordcloud(all_results):
                                         Each dictionary should have a key 'review_text' containing the text of the review.
 
     Returns:
-    None: this function does not return any value. It directly displays the word cloud image or prints a message if there are no words to display.
+    None: this function does not return any value. It directly displays the word cloud image or 
+            prints a message if there are no words to display.
     """
     filtered_text = generate_filtered_text(all_results)
 
@@ -184,7 +193,7 @@ def display_wordcloud(all_results):
     plt.show()
 
 # Create function to select a single product from the treeview widget
-def on_select(event):
+def on_select(event: tk.Event) -> None:
     """
     Handles the selection of a product from the products_tree Treeview widget. When a product is selected,
     this function retrieves the selected product's ASIN and URL, and then attempts to scrape the product's
@@ -197,6 +206,7 @@ def on_select(event):
     Returns:
     None: this function does not return any value but updates the GUI elements and global variables.
     """
+
     global product_id, product_url
 
     selected_items = products_tree.selection()
@@ -218,7 +228,7 @@ def on_select(event):
 
 
 # Create function to update the treeview widget
-def update_treeview(keyword, search_param, num_pages):
+def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
     """
     Updates the Treeview widget (products_tree) with product data based on the specified search parameters.
     It creates a DataFrame to hold the product data, fetches data from Amazon using the
@@ -233,8 +243,9 @@ def update_treeview(keyword, search_param, num_pages):
     Returns:
     None: this function does not return any value but updates the products_tree Treeview and the global variable.
     """
-    global product_df
 
+    global product_df
+    
     product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
     product_data = get_amazon_product_data(keyword, search_param, num_pages)
     product_df = pd.concat([product_df, pd.DataFrame(product_data)], ignore_index=True)
@@ -248,7 +259,7 @@ def update_treeview(keyword, search_param, num_pages):
 
 
 # Create a function to run the scraping process
-def run_scraping():
+def run_scraping() -> None:
     """
     Manages the process of scraping reviews for a specified product ID. It validates the product ID,
     retrieves the number of review pages to scrape, calls the scrape_data function to scrape reviews,
@@ -301,7 +312,7 @@ def run_scraping():
 
 
 # Create function to start a separate thread
-def start_scraping_thread():
+def start_scraping_thread() -> None:
     """
     Initiates the review scraping process in a separate thread. This function creates a new thread
     targeting the 'run_scraping' function, which handles the scraping of Amazon product reviews.
@@ -456,12 +467,12 @@ max_subjectivity_entry = tk.Entry(subjectivity_frame, width=5)
 max_subjectivity_entry.grid(row=1, column=1, padx=5, pady=2, sticky="w")
 
 # Subjectivity explanation
-subjectivity_explanation_text = (
+SUBJECTIVITY_EXPLANATION_TEXT = (
     "Subjectivity score measures how subjective or opinionated the review is,\n"
     "and ranges from 0 (completely objective) to 1 (completely subjective)."
 )
 subjectivity_explanation = tk.Label(
-    right_frame, text=subjectivity_explanation_text, font=tkFont.Font(size=9), justify="left"
+    right_frame, text=SUBJECTIVITY_EXPLANATION_TEXT, font=tkFont.Font(size=9), justify="left"
 )
 subjectivity_explanation.grid(row=3, column=1, padx=1, pady=1, sticky="w")
 
@@ -479,11 +490,11 @@ max_polarity_entry = tk.Entry(polarity_frame, width=5)
 max_polarity_entry.grid(row=1, column=1, padx=5, pady=2, sticky="w")
 
 # Polarity explanation
-polarity_explanation_text = (
+POLARITY_EXPLANATION_TEXT = (
     "Polarity score measures how negative or positive the sentiment of the review is,\n"
     "and ranges from -1 (extremely negative) to 1 (extremely positive)."
 )
-polarity_explanation = tk.Label(right_frame, text=polarity_explanation_text, font=tkFont.Font(size=9), justify="left")
+polarity_explanation = tk.Label(right_frame, text=POLARITY_EXPLANATION_TEXT, font=tkFont.Font(size=9), justify="left")
 polarity_explanation.grid(row=4, column=1, padx=1, pady=1, sticky="w")
 
 # Create a button to apply filters
