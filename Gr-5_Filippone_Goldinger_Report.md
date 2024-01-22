@@ -12,7 +12,7 @@ Lara Filippone, Florian Goldinger 25.01.2024
 
 Test code snippet:
 
-```
+``` python
 product_description_div = soup.find("div", {"id": "productFactsDesktopExpander"})
 
     if product_description_div:
