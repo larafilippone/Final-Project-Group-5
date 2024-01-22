@@ -67,8 +67,6 @@ def get_reviews_from_html(page_html: str) -> list:
     # If no reviews are found with the 'data-hook' attribute, try different classes
     if not reviews:
         reviews = soup.find_all("div", class_="a-section celwidget")
-        if not reviews:
-            reviews = soup.find_all("div", class_="a-section review aok-relative")
 
     return reviews
 
