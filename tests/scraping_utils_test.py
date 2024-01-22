@@ -2,7 +2,6 @@
 scraping_utils_test.py: This script is for testing the functions contained in scraping_utils.py.
 """
 
-import re
 import unittest
 from unittest.mock import MagicMock, call, patch
 
