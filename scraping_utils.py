@@ -5,7 +5,7 @@ scraping_utils.py: Contains functions and utilities for scraping data from Amazo
 import logging
 import random
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 import pandas as pd
 import requests
@@ -15,9 +15,9 @@ from config import HEADERS, USER_AGENTS
 from data_analysis import analyze_sentiment_with_textblob
 
 # Initialize global variables
-all_results = []
+all_results: List[Dict[str, Any]] = []
 product_df = pd.DataFrame()
-product_id = None
+product_id: str = ""
 product_url = ""
 
 
@@ -39,7 +39,7 @@ def get_page_html(page_url: str) -> str:
         # Update the 'user-agent' in the HEADERS
         HEADERS["user-agent"] = user_agent
 
-        response = requests.get(page_url, headers=HEADERS)
+        response = requests.get(page_url, headers=HEADERS, timeout=10)
         response.raise_for_status()  # Raises HTTPError for bad responses
         return response.text
 
@@ -83,7 +83,7 @@ def get_review_date(soup_object: BeautifulSoup) -> str:
     str: the date of the review as a string.
     """
     date_string = soup_object.find("span", {"class": "review-date"}).get_text()
-    return date_string
+    return str(date_string)
 
 
 # Create a function to retrieve the review text
@@ -102,7 +102,7 @@ def get_review_text(soup_object: BeautifulSoup) -> str:
     if not review_text:
         review_text = soup_object.find("span", {"data-hook": "review-body"})
 
-    return review_text.get_text().strip() if review_text else "No review text"
+    return str(review_text.get_text().strip()) if review_text else "No review text"
 
 
 # Create a function to retrieve the review title
@@ -123,7 +123,7 @@ def get_review_header(soup_object: BeautifulSoup) -> str:
     if not review_header:
         review_header = soup_object.find("a", {"data-hook": "review-title"})
 
-    return review_header.get_text().strip() if review_header else "No title"
+    return str(review_header.get_text().strip()) if review_header else "No title"
 
 
 # Create a function to retrieve the review rating
@@ -140,7 +140,7 @@ def get_number_stars(soup_object: BeautifulSoup) -> str:
     star_element = soup_object.find("span", {"class": "a-icon-alt"})
     # If the class selector finds the element, extract text, otherwise return "No rating"
     if star_element:
-        return star_element.get_text().strip()
+        return str(star_element.get_text().strip())
     else:
         return "No rating"
 
@@ -204,7 +204,8 @@ def scrape_data(product_id: str, num_review_pages: int) -> List[Dict]:
     List[Dict]: a list of dictionaries, each containing data about a review.
     """
     urls = [
-        f"https://www.amazon.com/product-reviews/{product_id}/ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}"
+        f"https://www.amazon.com/product-reviews/{product_id}/"
+        f"ref=cm_cr_arp_d_paging_btm_next_{page}?ie=UTF8&reviewerType=all_reviews&pageNumber={page}"
         for page in range(1, num_review_pages + 1)
     ]
     scraped_data = scrape_amazon_reviews(urls)
@@ -222,7 +223,8 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int = 1)
     num_pages (int): the number of pages to scrape (default is 1 to not pulling to many requests and get blocked)
 
     Returns:
-    product_data (dict): a dictionary containing scraped product data with keys 'Product Name', 'Product URL', and 'ASIN'.
+    product_data (dict): a dictionary containing scraped product data with keys 
+                        'Product Name', 'Product URL', and 'ASIN'.
     """
     product_data: Dict[str, List[str]] = {"Product Name": [], "Product URL": [], "ASIN": []}
 
@@ -236,7 +238,7 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int = 1)
             headers = {**HEADERS, "user-agent": user_agent}
 
             # Retrieves the html content of the base_url
-            response = requests.get(base_url, headers=headers)
+            response = requests.get(base_url, headers=headers, timeout=10)
 
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, "html.parser")
@@ -246,7 +248,8 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int = 1)
 
                 if products_list:
                     for product in products_list:
-                        # searches for content between <span class="a-size- (to account for medium, small etc.) and </span>
+                        # searches for content between <span class="a-size- 
+                        #(to account for medium, small etc.) and </span>
                         product_name = product.find_all("span", class_=re.compile("^a-size-"))
 
                         if product_name:
@@ -286,7 +289,8 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int = 1)
 # Create a function to retrieve a product's description from Amazon
 def scrape_amazon_product_description(product_url: str) -> Optional[str]:
     """
-    Function scrapes the product url to retrieve the product description. The html pages of Amazon categories are very differently structured.
+    Function scrapes the product url to retrieve the product description. 
+    The html pages of Amazon categories are very differently structured.
     Therefore, different versions need to be covered.
 
     Arguments:
@@ -300,10 +304,11 @@ def scrape_amazon_product_description(product_url: str) -> Optional[str]:
         user_agent = random.choice(USER_AGENTS)
         headers = {**HEADERS, "user-agent": user_agent}
 
-        response = requests.get(product_url, headers=headers)
+        response = requests.get(product_url, headers=headers, timeout=10)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, "html.parser")
-            # Version 1 find content between <div id="feature-bullets" class="a-section a-spacing-medium a-spacing-top-small"> and </div>
+            # Version 1 find content between <div id="feature-bullets" class="a-section a-spacing-medium a-spacing-top-small"> 
+            # and </div>
             product_description_div = soup.find("div", {"id": "feature-bullets"})
             if product_description_div:
                 # Find the content between <ul class="a-unordered-list a-vertical a-spacing-mini"> and </ul>
@@ -363,7 +368,8 @@ def scrape_amazon_product_description(product_url: str) -> Optional[str]:
                     print("version 3")  # Strip any leading/trailing whitespace
                     return description_text.strip()
 
-            # Version 4 find content between <div id="productDescription"... and </div> all at the bottom of Amazon page - the least prefered
+            # Version 4 find content between <div id="productDescription"... and </div> 
+            # all at the bottom of Amazon page - the least prefered
             product_description_div = soup.find("div", {"id": "productDescription"})
             if product_description_div:
                 # Find content between <p> and </p>
