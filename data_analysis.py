@@ -4,10 +4,10 @@ data_analysis.py: Provides functionalities for analyzing and visualizing data ex
 
 from typing import Any, Dict, List, Tuple
 
-
+from textblob import TextBlob
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from textblob import TextBlob
+
 
 
 
@@ -56,18 +56,22 @@ def get_polarity_color(reviews: List[Dict[str, Any]]) -> Tuple[float, str]:
 
 
 # Create a function to preprocess text for the word cloud
-def generate_filtered_text(all_results):
+def generate_filtered_text(all_results: List[Dict[str, Any]]) -> str:
     """
     Processes a collection of reviews to generate a single string of text, suitable for generating a word cloud.
-    This function tokenizes the review texts, filters out common English stopwords, and concatenates the remaining words into a single string.
-    Only words that are purely alphabetical are retained, so that the final string does not contain numbers or special characters.
+    This function tokenizes the review texts, filters out common English stopwords, 
+    and concatenates the remaining words into a single string.
+    Only words that are purely alphabetical are retained, so that the final string does not contain 
+    numbers or special characters.
 
     Arguments:
     all_results (List[Dict[str, Any]]): a list of dictionaries where each dictionary contains the data of a review.
-                                        Each dictionary should have a key 'review_text' containing the text of the review.
+                                        Each dictionary should have a key 'review_text' containing 
+                                        the text of the review.
 
     Returns:
-    str: a single string that concatenates all the filtered words from the reviews. Returns an empty string if 'all_results' is empty or if no words are left after filtering.
+    str: a single string that concatenates all the filtered words from the reviews. 
+    Returns an empty string if 'all_results' is empty or if no words are left after filtering.
     """
     if not all_results:
         return ""
