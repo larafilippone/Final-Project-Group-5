@@ -178,6 +178,26 @@ With the message attribute we can specify how the answer should look like in gen
 
 The answer can be accessed by `response["choices"][0]["message"]["content"]`. As Chat GPT generates several answers, with choice = 0 and message = content the content of the first answer is accessed and then returned after making sure that it is in string format. 
 
+**Error Handling**
+
+As to all the scripts where we interact with a web server or with an API we have added on error handling. Because in such situation we might face runtime errors. As such we can detect them and inform accordingly. 
+
+``` python
+try:
+...
+except openai.error.AuthenticationError as e:
+    print(f"OpenAI API error: {e}")
+    return "Authentication error: please check your Chat GPT API key"
+except ValueError as ve:
+    print(f"Value error: {ve}")
+    return "A value error occurred while processing your request."
+except Exception as ex:
+    print(f"An unexpected error occurred: {ex}")
+    return "An unexpected error occurred while processing your request."
+```
+
+In the case of Chat GPT, we want to emphasize the first 'except' command, specifically except `openai.error.AuthenticationError as e:`, which identifies authentication problems. This may occur if you forget to manually add a correct API key token. In such cases, an error message is printed, prompting you to enter a valid key in the GUI."
+
 
 ### Testing and bug-fixing
 
