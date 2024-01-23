@@ -178,7 +178,7 @@ With the message attribute we can specify how the answer should look like in gen
 
 The answer can be accessed by `response["choices"][0]["message"]["content"]`. As Chat GPT generates several answers, with choice = 0 and message = content the content of the first answer is accessed and then returned after making sure that it is in string format. 
 
-**Error Handling**
+*Error Handling*
 
 As to all the scripts where we interact with a web server or with an API we have added on error handling. Because in such situation we might face runtime errors. As such we can detect them and inform accordingly. 
 
