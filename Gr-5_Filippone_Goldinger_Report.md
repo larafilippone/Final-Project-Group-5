@@ -94,11 +94,47 @@ product_description_div = soup.find("div", {"id": "productFactsDesktopExpander"}
 
 ## Collaboration and Teamwork
 
-### Team roles and responsibilities
+We decided to split our tool into distinct features, allowing each team member to work on specific parts of the project. Overall, we managed to achieve a good and equal distribution of the total workload.
+
+We identified the following sub-features with the corresponding person in charge:
+
+1. **Amazon Search Feature** (Florian): Replicating the search functionality as known from the Amazon homepage. This involved analyzing the functioning of the Amazon search, examining the HTML code of the landing pages, developing scraping techniques, extracting ASIN for other features, and displaying the results in the GUI.
+
+2. **Product Description** (Florian): Following the product search, upon selecting a product, the product description should be shown. Again, Amazon landing pages are diverse, requiring different scraping approaches for the various versions and associated HTML source code.
+
+3. **Scraping Amazon Reviews** (Lara): Developing different scraping versions based on the HTML source code, which varies across different product pages.
+
+4. **Sentiment Analysis** (Lara): Deploying sentiment analysis on the reviews, displaying both subjectivity and polarity scores.
+
+5. **Filter Feature** (Lara): Enhancing the display of sentiment results by introducing a filter based on subjectivity and polarity.
+
+6. **Graphical Display of Sentiment** (Lara): Introducing a graphical display (red, orange, green) based on the average sentiment score.
+
+7. **Chat GPT API** (Florian): Connecting the tool with Chat GPT, developing the correct connection through the API.
+
+8. **Product Summary / Improvement** (Florian): Gathering and displaying the product summary and improvement suggestions using the Chat GPT API.
+
+9. **Graphical Wordcloud** (Lara): Implementing a word cloud display that summarizes key words in the reviews. Stop words had to be filtered out to obtain an appropriate result.
+
+10. **Integration of Features** (team): Integrating all features into a seamless, logical process and into one main script.
+
+11. **Graphical User Interface** (team): Developing a user-friendly and intuitive interface to easily use the tool and display all relevant results in a summarized way.
+
+12. **Testing** (team): Extensive testing of the code and the GUI. 
+
+13. **Code Improvement / Bug Fixing** (team): Using various tools (pylint, mypy, black) to improve the code and fix bugs.
 
 ### Collaboration techniques
 
+Overall, we managed to foster a strong team spirit in which both team members could contribute equally to the project. We developed a supportive mindset, collaborating on each other's features and working together to find overall solutions. Consequently, we could easily integrate all the different parts of the project.
+
+The main tool we used for the code part was **GitHub**. It was essential for a project of this scope to correctly version control the code and integrate all parts of the project. In summary, it wouldn't have been possible to work without it.
+
+To discuss the project architecture and communicate progress, we set up regular in-person **meetings** at the University, but we also utilized **Zoom** calls. For quick updates, we used **WhatsApp**. As both team members were responsive, we could maintain a constant exchange, and everyone stayed up to date.
+
 ### Conflict resolution
+
+No real conflicts arose as we communicated effectively and both were motivated to develop a good tool. The main reasons for the smooth process were a well-defined project scope (architecture), division of feature development tasks, and consistent updates to keep each other informed. 
 
 ## Project Design and Creativity
 
