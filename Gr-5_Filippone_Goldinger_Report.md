@@ -262,3 +262,6 @@ As far as user experience is concerned, our tool is designed to be user-friendly
 The GUI also includes explanatory notes on polarity and subjectivity scores, clearly informing users about what these metrics mean and how they can be interpreted. All other widgets and functionalities within the GUI are designed to be straightforward and self-explanatory, meaning that users can benefit from the sophisticated analysis our tool provides without the need to have a technical background.
 
 ## Conclusion
+
+## References
+J. James, "amazon_review_scraper.py", (2019), GitHub gist. https://gist.github.com/jrjames83/4653d488801be6f0683b91eda8eeb627
