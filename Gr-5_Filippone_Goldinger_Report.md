@@ -9,9 +9,9 @@ Lara Filippone, Florian Goldinger
 ## Introduction
 In the ever-evolving domain of e-commerce, customer experience and feedback have become more and more significant. Recognizing the central role of these dimensions for businesses, our project aimed to explore the potential of modern technology to optimize and innovate the processing of customer opinions. Specifically, we focused on Amazon product reviews, a rich source of consumer insights, although generally difficult to fully explore due to its great volume and unstructured nature.
 
-The primary objective of this project was the development of an analytical tool tailored for customer service, product managers and Amazon sellers in general. The tool we propose is designed to facilitate and automate the analysis of extensive textual data from Amazon product reviews. By doing so, it empowers these stakeholders to gain instant insights on customer sentiments, experiences, and preferences, leading to informed decision-making and product enhancements.
+The primary objective of this project was the development of the Amazon Review Analyzer, an analytical tool tailored for customer service, product managers and Amazon sellers in general. Our proposal is designed to facilitate and automate the analysis of extensive textual data from Amazon product reviews. By doing so, it empowers these stakeholders to gain instant insights on customer sentiments, experiences, and preferences, leading to informed decision-making and product enhancements.
 
-To achieve this, we outlined the following key functionalities for our tool:
+To achieve this, we outlined the following key functionalities for our application:
 
 Collection of Amazon reviews: employing web scraping techniques, the tool can gather reviews for a specific product from Amazon. This forms the foundational dataset for subsequent analyses.
 
@@ -30,6 +30,34 @@ The expected outcome of this project was the implementation of a tool that showc
 ## Code Quality and Functionality
 
 ### Code overview
+In developing our Amazon Review Analyzer application, we employed a range of tools:
+
+The Integrated Development Environment (IDE) used was Visual Studio Code, primarily for the possibility of creating and managing virtual environments. This feature was particularly important in the development of our application, as it allowed us to isolate of project-specific dependencies, ensuring a clean and controlled development workspace.
+
+The core programming language used to develop our application was Python, specifically version 3.11.5. We opted for this version instead of newer ones to ensure compatibility with all the libraries used in our project.
+
+To implement the web scraping functionalities, one of the central aspects of the application, we employed BeautifulSoup. This library is particularly suitable for parsing HTML and XML documents, making it ideal for extracting data from Amazon's complex web pages.
+
+For sentiment analysis, we incorporated the TextBlob library, which represents a great choice to easily analyze the textual content of Amazon reviews.
+
+Our application additionally integrates the OpenAI API to connect with the advanced natural language processing abilities of ChatGPT. This integration enables the application to generate insightful summaries and suggestions based on the Amazon product reviews.
+
+For the GUI development, we relied on Tkinter, a standard GUI toolkit in Python that offers the possibility to easily create intuitive and user-friendly interfaces.
+
+Our project's codebase was divided into multiple scripts to ensure readability, maintainability, and reusability. The scripts were organized as follows:
+
+main.py: the main Python script and the entry point of the application. It sets up the main GUI layout using Tkinter and handles the orchestration and event processing between different components.
+
+scraping_utils.py: this script contains functions and utilities for the web scraping processes, primarily using BeautifulSoup to scrape data from Amazon.
+
+data_analysis.py: dedicated to analyzing the extracted data from Amazon reviews, this script contains the functions related to sentiment analysis and keyword identification.
+
+chatgpt_integration.py: this script manages the integration with the ChatGPT API.
+
+utils.py: a collection of general utility functions used throughout the application for code reusability and consistency.
+
+config.py: the script containing configuration settings and constants, defining important parameters for easy configuration of the application.
+
 
 Test code snippet:
 
