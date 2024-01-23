@@ -70,7 +70,7 @@ The script begins by importing essential packages needed in later stages, such a
 
 In addition to the public packages, this section of the code imports custom functions created for the project, such as `scrape_data` and `ask_chatgpt`. These functions are organized into modules containing functions with similar functionality. This approach enhances code readability and promotes code reuse.
 
-```
+``` python
 ...
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
