@@ -29,7 +29,7 @@ The expected outcome of this project was the implementation of a tool that showc
 
 ## Code Quality and Functionality
 
-### Code overview
+### Code Overview
 In developing our Amazon Review Analyzer application, we employed a range of tools:
 
 The Integrated Development Environment (IDE) used was Visual Studio Code, primarily for the possibility of creating and managing virtual environments. This feature was particularly important in the development of our application, as it allowed us to isolate of project-specific dependencies, ensuring a clean and controlled development workspace.
@@ -88,22 +88,32 @@ product_description_div = soup.find("div", {"id": "productFactsDesktopExpander"}
                 return description_text.strip()
 ```
 
-### Code functionality and quality
+### Code Functionality and Quality
 
-### Testing and bug-fixing
+### Testing and Bug-Fixing
 
 ## Collaboration and Teamwork
 
-### Team roles and responsibilities
+### Team Roles and Responsibilities
 
-### Collaboration techniques
+### Collaboration Techniques
 
-### Conflict resolution
+### Conflict Resolution
 
 ## Project Design and Creativity
 
-### Innovation and creativity
+### Innovation and Creativity
+Our project introduces an innovative solution intended for sellers, customer service, and product management teams who often encounter the challenge of managing an overwhelming quantity of product reviews. One of the key features of our application is its ability to filter reviews based on sentiment, moving beyond the traditional star rating system. This functionality allows for a more insightful understanding of customer feedback.
 
-### User experience
+The integration with ChatGPT represents another innovative aspect, as it enables the app to provide immediate, AI-driven insights into the key aspects highlighted in positive and negative reviews, along with suggestions for product improvement, based on the insights retrieved from customer complaints. This can significantly accelerate the process of addressing customer service issues and adapting products to meet customer needs and preferences, providing sellers with a rapid and clear understanding of their products' reception.
+
+Our application includes creative solutions as well, like the generation of word clouds from review keywords. This functionality creates an engaging visual representation of the most discussed topics, and besides adding a visual appeal it can also serve a practical purpose in presentations, making the data both impactful and straightforward.
+
+Moreover, we make use of color coding to represent the average sentiment polarity of the reviews: green for positive, orange for neutral, and red for negative sentiments. This intuitive use of colors creates an immediate, evocative understanding of the overall sentiment, enhancing the impact and interpretability of the data.
+
+### User Experience
+As far as user experience is concerned, our tool is designed to be user-friendly and accessible: despite the complexity of the underlying Python code, users can directly interact with a simple and intuitive GUI. Precisely, the interface mimics the familiar experience of browsing the Amazon website, allowing users to input a product name, keyword, or ASIN to receive a list of results in a straightforward format.
+
+The GUI also includes explanatory notes on polarity and subjectivity scores, clearly informing users about what these metrics mean and how they can be interpreted. All other widgets and functionalities within the GUI are designed to be straightforward and self-explanatory, meaning that users can benefit from the sophisticated analysis our tool provides without the need to have a technical background.
 
 ## Conclusion
