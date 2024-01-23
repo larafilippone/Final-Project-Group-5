@@ -58,37 +58,90 @@ utils.py: a collection of general utility functions used throughout the applicat
 
 config.py: the script containing configuration settings and constants, defining important parameters for easy configuration of the application.
 
+### Code functionality and quality
 
-Test code snippet:
+In the following, we will walk through the main scripts described above and explain important code snippets. This section covers only the key code segments. Further details can be obtained in the scripts where everything has been commented out in detail. Docstrings are added to all of the functions to explain the purpose of the function, the arguments and what is returned. 
 
-``` python
-product_description_div = soup.find("div", {"id": "productFactsDesktopExpander"})
+#### main.py
 
-    if product_description_div:
-        # Check for several unordered lists betwen <ul class="a-unordered-list a-vertical a-spacing-small"> and </ul>
-        unordered_lists = product_description_div.find_all("ul", {"class": "a-unordered-list"})
+The `main.py` script serves as the entry point of the application. Its primary functions include generating the Graphical User Interface (GUI) and managing the interaction among different features.
 
-        if unordered_lists:
-            description_text = ""
+```
+...
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import pandas as pd
 
-            for ul in unordered_lists:
-                # Find all list items within the unordered list
-                item_list = ul.find_all("li")
-
-                if item_list:
-                    # Extract text from each list item
-                    list_text = "\n".join(
-                       "/ " + item.find("span", {"class": "a-list-item"}).text.strip() for item in item_list
-                        )
-
-                        # Append the list text to the overall description
-                        description_text += list_text
-
-                print("version 2")
-                return description_text.strip()
+from chatgpt_integration import ask_chatgpt
+from config import SEARCH_PARAMS
+from data_analysis import get_polarity_color, generate_filtered_text
+from scraping_utils import get_amazon_product_data, scrape_amazon_product_description, scrape_data
+...
 ```
 
-### Code functionality and quality
+The script begins by importing essential packages needed in later stages, such as `WordCloud` and `matplotlib`. Within the project's virtual environment, these packages must be installed using pip install. All the requirements are listed in the requirements.txt file.
+
+In addition to the public packages, this section of the code imports custom functions created for the project, such as `scrape_data` and `ask_chatgpt`. These functions are organized into modules containing functions with similar functionality. This approach enhances code readability and promotes code reuse.
+
+``` python 
+# Initialize the main application window using Tkinter
+app = tk.Tk()
+app.title("Amazon Review Analyzer")
+```
+
+The graphical user interface is initialized in the main script by using the Tkinter library. `app = tk.Tk()` creates the window that can later be populated with different widgets. The window size is dynamically adapted to the size of the computer screen. 
+ 
+ ``` python
+ # Create frames for the left and right sides
+left_frame = tk.Frame(app, borderwidth=0, relief="flat")
+right_frame = tk.Frame(app, borderwidth=0, relief="flat")
+```
+
+To achieve a well-organized layout, the window was divided into two separate frames. These frames serve as invisible containers for placing widgets, and a row-and-column grid system was employed for precise widget placement within these frames.
+
+Exemplary, below you can find the placement of a button to start the scraping process for reviews:
+
+``` python
+# Create button to start the search
+search_button = tk.Button(
+    left_frame,
+    text="Search Amazon",
+    command=lambda: update_treeview(
+        keyword_entry.get(), value_to_key(search_param_var.get()), int(num_pages_entry.get())
+    ),
+)
+search_button.grid(row=3, column=0, columnspan=2, padx=300, pady=20, sticky="w")
+```
+The button is positioned within the links_frame using the grid layout. The parameters in the grid method determine the row, column, and the padding (distance) with respect to the x and y axes. With the command attribute, the function starting the scraping process `update_treeview` is linked to the button and executed when the user clicks on it. The `update_treeeview` function takes on the values entered into the keyword, search_param and num_pages field as attributes. 
+
+Thus a click starts this function: 
+
+``` python
+def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
+...
+    product_df = pd.DataFrame(columns=["Number", "Product Name", "Product URL", "ASIN"])
+    product_data = get_amazon_product_data(keyword, search_param, num_pages)
+    product_df = pd.concat([product_df, pd.DataFrame(product_data)], ignore_index=True)
+
+    for row in products_tree.get_children():
+        products_tree.delete(row)
+
+    if not product_df.empty:
+        for i, row in product_df.iterrows():
+            products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["ASIN"]))
+```
+This function again enters the values receives from the function `get_amazon_product_data` into the Dataframe `product_df`and updates the treeview widget with the same data and the command `products_tree.insert`.
+
+Similarily other widgets are linked to imported functions that execute scraping processes or for example access the Chat GPT API. 
+
+Thus the button for scrapping, on selection executes the following functions consecutively: 
+
+- `scrape_data(product_id, num_review_pages)` scrapes all the reviews of a specific product_id
+- `display_review(review)` displays the reviews in a text field 
+- `display_average_polarity_and_color()` displays the average polarity in a graphic (red, orange, green)
+- `display_chatgpt(all_results)` connects to chat_gpt and displays results in two text fields 
+
+Thus the GUI is build up in the main script, retrieving information from the user like the product searched and on selection of buttons or lists is executing functions of imported modules. These functions again are executing scraping processes, further processing the data or displaying information. 
 
 ### Testing and bug-fixing
 
