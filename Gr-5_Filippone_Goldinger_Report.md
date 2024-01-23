@@ -13,17 +13,17 @@ The primary objective of this project was the development of the Amazon Review A
 
 To achieve this, we outlined the following key functionalities for our application:
 
-Collection of Amazon reviews: employing web scraping techniques, the tool can gather reviews for a specific product from Amazon. This forms the foundational dataset for subsequent analyses.
+**Collection of Amazon reviews**: employing web scraping techniques, the tool can gather reviews for a specific product from Amazon. This forms the foundational dataset for subsequent analyses.
 
-Sentiment analysis: the tool performs sentiment analysis on the collected reviews, assigning a numerical score according to their positive, negative, or neutral content. This provides a quantitative measure of customer satisfaction that can be later employed for further analysis.
+**Sentiment analysis**: the tool performs sentiment analysis on the collected reviews, assigning a numerical score according to their positive, negative, or neutral content. This provides a quantitative measure of customer satisfaction that can be later employed for further analysis.
 
-Keyword identification: by analyzing the review text, the tool identifies recurring keywords, highlighting the most discussed aspects of the product.
+**Keyword identification**: by analyzing the review text, the tool identifies recurring keywords, highlighting the most discussed aspects of the product.
 
-Generative AI for summarization: through the use of generative AI, the tool synthesizes the vast amount of review data into concise summaries. These summaries offer automated and quick insights into the overall customer experience.
+**Generative AI for summarization**: through the use of generative AI, the tool synthesizes the vast amount of review data into concise summaries. These summaries offer automated and quick insights into the overall customer experience.
 
-Generative AI for product improvement suggestions: additionally, the tool uses generative AI to automatically propose actionable product improvements based on the review analysis.
+**Generative AI for product improvement suggestions**: additionally, the tool uses generative AI to automatically propose actionable product improvements based on the review analysis.
 
-User-friendly GUI: to ensure accessibility and ease of use, said functionalities are condensed within an intuitive and user-friendly Graphical User Interface (GUI) and accompanied by meaningful and evocative visualizations.
+**User-friendly GUI**: to ensure accessibility and ease of use, said functionalities are condensed within an intuitive and user-friendly Graphical User Interface (GUI) and accompanied by meaningful and evocative visualizations.
 
 The expected outcome of this project was the implementation of a tool that showcases the potential of integrating various functionalities into a single platform. Although our tool is a preliminary and simple version, it is thought as a proposal for how such a system could be developed and utilized in a real-world scenario. By demonstrating the feasibility and effectiveness of combining web scraping, sentiment analysis, keyword identification, and generative AI technologies for the analysis of Amazon product reviews, this project offers insights into the practical applications of these technologies in e-commerce and customer feedback analysis.
 
@@ -32,31 +32,31 @@ The expected outcome of this project was the implementation of a tool that showc
 ### Code overview
 In developing our Amazon Review Analyzer application, we employed a range of tools:
 
-The Integrated Development Environment (IDE) used was Visual Studio Code, primarily for the possibility of creating and managing virtual environments. This feature was particularly important in the development of our application, as it allowed us to isolate of project-specific dependencies, ensuring a clean and controlled development workspace.
+The Integrated Development Environment (IDE) used was **Visual Studio Code**, primarily for the possibility of creating and managing virtual environments. This feature was particularly important in the development of our application, as it allowed us to isolate of project-specific dependencies, ensuring a clean and controlled development workspace.
 
-The core programming language used to develop our application was Python, specifically version 3.11.5. We opted for this version instead of newer ones to ensure compatibility with all the libraries used in our project.
+The core programming language used to develop our application was **Python**, specifically version 3.11.5. We opted for this version instead of newer ones to ensure compatibility with all the libraries used in our project.
 
-To implement the web scraping functionalities, one of the central aspects of the application, we employed BeautifulSoup. This library is particularly suitable for parsing HTML and XML documents, making it ideal for extracting data from Amazon's complex web pages.
+To implement the web scraping functionalities, one of the central aspects of the application, we employed **BeautifulSoup**. This library is particularly suitable for parsing HTML and XML documents, making it ideal for extracting data from Amazon's complex web pages.
 
-For sentiment analysis, we incorporated the TextBlob library, which represents a great choice to easily analyze the textual content of Amazon reviews.
+For sentiment analysis, we incorporated the **TextBlob** library, which represents a great choice to easily analyze the textual content of Amazon reviews.
 
-Our application additionally integrates the OpenAI API to connect with the advanced natural language processing abilities of ChatGPT. This integration enables the application to generate insightful summaries and suggestions based on the Amazon product reviews.
+Our application additionally integrates the **OpenAI API** to connect with the advanced natural language processing abilities of ChatGPT. This integration enables the application to generate insightful summaries and suggestions based on the Amazon product reviews.
 
-For the GUI development, we relied on Tkinter, a standard GUI toolkit in Python that offers the possibility to easily create intuitive and user-friendly interfaces.
+For the GUI development, we relied on **Tkinter**, a standard GUI toolkit in Python that offers the possibility to easily create intuitive and user-friendly interfaces.
 
 Our project's codebase was divided into multiple scripts to ensure readability, maintainability, and reusability. The scripts were organized as follows:
 
-main.py: the main Python script and the entry point of the application. It sets up the main GUI layout using Tkinter and handles the orchestration and event processing between different components.
+`main.py`: the main Python script and the entry point of the application. It sets up the main GUI layout using Tkinter and handles the orchestration and event processing between different components.
 
-scraping_utils.py: this script contains functions and utilities for the web scraping processes, primarily using BeautifulSoup to scrape data from Amazon.
+`scraping_utils.py`: this script contains functions and utilities for the web scraping processes, primarily using BeautifulSoup to scrape data from Amazon.
 
-data_analysis.py: dedicated to analyzing the extracted data from Amazon reviews, this script contains the functions related to sentiment analysis and keyword identification.
+`data_analysis.py`: dedicated to analyzing the extracted data from Amazon reviews, this script contains the functions related to sentiment analysis and keyword identification.
 
-chatgpt_integration.py: this script manages the integration with the ChatGPT API.
+`chatgpt_integration.py`: this script manages the integration with the ChatGPT API.
 
-utils.py: a collection of general utility functions used throughout the application for code reusability and consistency.
+`utils.py`: a collection of general utility functions used throughout the application for code reusability and consistency.
 
-config.py: the script containing configuration settings and constants, defining important parameters for easy configuration of the application.
+`config.py: the script containing configuration settings and constants, defining important parameters for easy configuration of the application.
 
 ### Code functionality and quality
 
