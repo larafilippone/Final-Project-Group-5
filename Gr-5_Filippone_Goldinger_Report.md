@@ -143,7 +143,7 @@ Thus the GUI is build up in the main script, retrieving information from the use
 
 The Tkinter code is framed with the command ```app.mainloop()``` which starts the main event loop of the Tkinter application. This loop listens for events such as button clicks, product selection, etc., and it keeps the application running. It is placed at the end of the Tkinter script, after we have defined all our GUI components. 
 
-```
+``` python
 # Start the main event loop
 app.mainloop()
 ```
