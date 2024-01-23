@@ -147,6 +147,111 @@ The Tkinter code is framed with the command ```app.mainloop()``` which starts th
 # Start the main event loop
 app.mainloop()
 ```
+#### scraping_utils.py
+
+The module `scraping_utils.py` contains all the functions related to the scraping of online content from Amazon. Their implementation mainly relies on the BeatifulSoup library. Here we will discuss three key functions: `get_page_html`, `get_reviews_from_html`, and `get_review_text`.
+
+The `get_page_html` function is responsible for retrieving the HTML content of a web page. This function initializes the scraping process. It employs the requests library to send a GET request to the specified page URL, and returns the HTML content of the page.
+
+``` python
+# Create a function to retrieve the HTML code of a web page
+def get_page_html(page_url: str) -> str:
+    try:
+        # Choose a random user agent
+        user_agent = random.choice(USER_AGENTS)
+        # Update the 'user-agent' in the HEADERS
+        HEADERS["user-agent"] = user_agent
+
+        response = requests.get(page_url, headers=HEADERS, timeout=10)
+        response.raise_for_status()  # Raises HTTPError for bad responses
+        return response.text
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request error: {e}")
+        return ""  # Return empty string in case of an error
+```
+An important feature of this function is its use of random user agents from a predefined list (`USER_AGENTS`). This is a precaution taken to prevent detection as a bot by the website’s security systems.
+
+Once the HTML content is retrieved, `get_reviews_from_html` continues the process: it parses the HTML using BeautifulSoup and extracts the review elements. This function is essential for isolating the specific data (reviews) we are interested in from the entire HTML code.
+``` python
+# Create a function to retrieve review elements from HTML code
+def get_reviews_from_html(page_html: str) -> list:
+    soup = BeautifulSoup(page_html, "lxml")
+
+    # Try finding review elements by 'data-hook' attribute with value 'review'
+    reviews = soup.find_all("div", attrs={"data-hook": "review"})
+
+    # If no reviews are found with the 'data-hook' attribute, try different classes
+    if not reviews:
+        reviews = soup.find_all("div", class_="a-section celwidget")
+
+    return reviews
+```
+The function uses BeautifulSoup's parsing functionalities to locate review elements, first trying to find them by a specific 'data-hook' attribute and then by a class name. This dual approach ensures that the detection works for every product, considering the variability in Amazon’s page structure.
+
+The `get_review_text function` is an example of how specific pieces of information are extracted from each review. Similar functions are used for retrieving other parts of a review, namely the title, the date and the rating.
+``` python
+# Create a function to retrieve the review text
+def get_review_text(soup_object: BeautifulSoup) -> str:
+    review_text = soup_object.find("span", {"class": "a-size-base review-text review-text-content"})
+    # If the class selector doesn't find the element, try the data-hook attribute
+    if not review_text:
+        review_text = soup_object.find("span", {"data-hook": "review-body"})
+
+    return str(review_text.get_text().strip()) if review_text else "No review text"
+```
+This function demonstrates our approach to handling variability in HTML structures: it first attempts to find the review text using one class selector and, if unsuccessful, it tries another selector. Again, the different attempts ensure that the data extraction works with differently structured Amazon web pages.
+
+#### data_analysis.py
+
+The `data_analysis.py` module provides functionalities for analyzing and visualizing data extracted from Amazon reviews. It includes three significant functions: `analyze_sentiment_with_textblob`, `get_polarity_color`, and `generate_filtered_text`.
+
+The `analyze_sentiment_with_textblob` function is designed to perform sentiment analysis on the given text. It utilizes the TextBlob library, suited for natural language processing tasks.
+``` python
+# Create a function to perform sentiment analysis
+def analyze_sentiment_with_textblob(text: str):
+    testimonial = TextBlob(text)
+    return testimonial.sentiment
+```
+This function takes a string input (the review text) and returns the sentiment analysis result, which includes polarity and subjectivity scores. Polarity measures how positive or negative the text is, while subjectivity measures how subjective or opinionated the text is.
+
+The `get_polarity_color` function calculates the average polarity score of all reviews and outputs a corresponding color based on the score.
+
+``` python
+# Create function to calculate average polarity score and output corresponding color
+def get_polarity_color(reviews: List[Dict[str, Any]]) -> Tuple[float, str]:
+    total_polarity = sum(review.get("textblob_polarity", 0) for review in reviews)
+    average_polarity = total_polarity / len(reviews) if reviews else 0
+
+    # Determine the color based on average polarity
+    if average_polarity < -0.25:
+        color = "red"  # Red light for negative sentiment
+    elif average_polarity > 0.25:
+        color = "green"  # Green light for positive sentiment
+    else:
+        color = "orange"  # Orange light for neutral sentiment
+
+    return average_polarity, color
+```
+The function iterates through a list of reviews, sums up their polarity scores, and calculates the average. Based on this average, it assigns a color: red for negative sentiment, green for positive, and orange for neutral. This color-coding system provides a quick and intuitive way to assess the general sentiment of the reviews.
+
+The `generate_filtered_text` function preprocesses review texts for creating a word cloud. This involves tokenizing the text, removing common English stopwords, and filtering out non-alphabetical characters.
+``` python
+# Create a function to preprocess text for the word cloud
+def generate_filtered_text(all_results: List[Dict[str, Any]]) -> str:
+    if not all_results:
+        return ""
+
+    # Combine all review texts into a single string
+    text = " ".join(review["review_text"] for review in all_results)
+
+    # Tokenize the text and remove stopwords
+    words = word_tokenize(text)
+    stop_words = set(stopwords.words("english"))
+    return " ".join(word for word in words if word.lower() not in stop_words and word.isalpha())
+```
+The function creates a concatenated string of all important words from the reviews, which can then be used to generate a word cloud.
+
 #### chatgpt_integration.py
 
 The module `chatgpt_integration.py` is providing the functions to interact with the OpenAI API. After setting up an account with OpenAI a personal access token will be generated that can be used to access the API `openai.api_key = "xx"`. The token is not stored in the script as we work with a public Git repository and we don't want to publish it. The token has to be added manually. In a more extensive project a shell script could be included to add on the key token that is stored locally. 
