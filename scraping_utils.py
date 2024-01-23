@@ -220,7 +220,7 @@ def get_amazon_product_data(keyword: str, search_param: str, num_pages: int = 1)
     Arguments:
     keyword (str): the search keyword inserted by the user
     search_param (str): the search parameter (e.g., 'Books', 'Electronics') which is equivalent to the Amazon homepage
-    num_pages (int): the number of pages to scrape (default is 1 to not pulling to many requests and get blocked)
+    num_pages (int): the number of pages to scrape (default is 1 not to pull many requests and get blocked)
 
     Returns:
     product_data (dict): a dictionary containing scraped product data with keys 
