@@ -56,7 +56,7 @@ Our project's codebase was divided into multiple scripts to ensure readability, 
 
 `utils.py`: a collection of general utility functions used throughout the application for code reusability and consistency.
 
-`config.py: the script containing configuration settings and constants, defining important parameters for easy configuration of the application.
+`config.py`: the script containing configuration settings and constants, defining important parameters for easy configuration of the application.
 
 ### Code functionality and quality
 
@@ -132,14 +132,14 @@ This function again enters the values received from the function `get_amazon_pro
 
 Similarily other widgets are linked to imported functions that execute scraping processes or for example access the Chat GPT API. 
 
-Thus the button for scrapping, on selection executes the following functions consecutively: 
+Thus the button for scraping, on selection executes the following functions consecutively: 
 
 - `scrape_data(product_id, num_review_pages)` scrapes all the reviews of a specific product_id
 - `display_review(review)` displays the reviews in a text field 
 - `display_average_polarity_and_color()` displays the average polarity in a graphic (red, orange, green)
-- `display_chatgpt(all_results)` connects to chat_gpt and displays results in two text fields 
+- `display_chatgpt(all_results)` connects to ChatGPT and displays results in two text fields 
 
-Thus the GUI is build up in the main script, retrieving information from the user like the product searched and on selection of buttons or lists is executing functions of imported modules. These functions again are executing scraping processes, further processing the data or displaying information. 
+Thus the GUI is built up in the main script, retrieving information from the user like the product searched and on selection of buttons or lists is executing functions of imported modules. These functions again are executing scraping processes, further processing the data or displaying information.
 
 The Tkinter code is framed with the command ```app.mainloop()``` which starts the main event loop of the Tkinter application. This loop listens for events such as button clicks, product selection, etc., and it keeps the application running. It is placed at the end of the Tkinter script, after we have defined all our GUI components. 
 
@@ -149,7 +149,7 @@ app.mainloop()
 ```
 #### chatgpt_integration.py
 
-The module `chatgpt_integration.py` is providing the functions to interact with the Open AI API. After setting up an account with Open AI a personal access token will be generated that can be used to access the API `openai.api_key = "xx"`. The token is not stored in the script as we work with a public Git repository and we don't want to publish it. The token has to be added manually. In a more extensive project a shell script could be added to add on the key token that is stored locally. 
+The module `chatgpt_integration.py` is providing the functions to interact with the OpenAI API. After setting up an account with OpenAI a personal access token will be generated that can be used to access the API `openai.api_key = "xx"`. The token is not stored in the script as we work with a public Git repository and we don't want to publish it. The token has to be added manually. In a more extensive project a shell script could be included to add on the key token that is stored locally. 
 
 ``` python
         # Insert the key for Open AI
@@ -171,16 +171,16 @@ The module `chatgpt_integration.py` is providing the functions to interact with 
         return str(generated_content.strip())
 ```
 
-When accessed, the API allows to generate an answer with the function `openai.ChatCompletion.create()`. The appropriate question to Chat GPT has been created earlier and stored in the variable `question_to_chatgpt`. 
-In general, we ask ChatGPT questions in a manner similar to how one would use the online tool. This has shown to generate the best responses. For the summary we ask "Summarize the negative and positive sentiment of the reviews attached. Limit to 6 bullet points. "
+When accessed, the API allows to generate an answer with the function `openai.ChatCompletion.create()`. The appropriate question to ChatGPT has been created earlier and stored in the variable `question_to_chatgpt`. 
+In general, we ask ChatGPT questions in a manner similar to how one would use the online tool. This has shown to generate the best responses. For the summary we ask "Summarize the negative and positive sentiment of the reviews attached. Limit to 6 bullet points."
 
 With the message attribute we can specify how the answer should look like in general and that the content should be informative. The temperature attribute indicates on how "creative" the answer should be. We limited to 0.7 which indicates moderate randomness.  
 
-The answer can be accessed by `response["choices"][0]["message"]["content"]`. As Chat GPT generates several answers, with choice = 0 and message = content the content of the first answer is accessed and then returned after making sure that it is in string format. 
+The answer can be accessed by `response["choices"][0]["message"]["content"]`. As ChatGPT generates several answers, with choice = 0 and message = content, the content of the first answer is accessed and then returned after making sure that it is in string format. 
 
 *Error Handling*
 
-As to all the scripts where we interact with a web server or with an API we have added on error handling. Because in such situation we might face runtime errors. As such we can detect them and inform accordingly. 
+As to all the scripts where we interact with a web server or with an API we have added on error handling. Because in such situations we might face runtime errors. As such we can detect them and inform accordingly.
 
 ``` python
 try:
@@ -196,7 +196,7 @@ except Exception as ex:
     return "An unexpected error occurred while processing your request."
 ```
 
-In the case of Chat GPT, we want to emphasize the first 'except' command, specifically except `openai.error.AuthenticationError as e:`, which identifies authentication problems. This may occur if you forget to manually add a correct API key token. In such cases, an error message is printed, prompting you to enter a valid key in the GUI."
+In the case of ChatGPT, we want to emphasize the first 'except' command, specifically except `openai.error.AuthenticationError as e:`, which identifies authentication problems. This may occur if you forget to manually add a correct API key token. In such cases, an error message is printed, prompting you to enter a valid key in the GUI.
 
 
 ### Testing and Bug-Fixing
