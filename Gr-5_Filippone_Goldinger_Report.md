@@ -305,6 +305,25 @@ In the case of ChatGPT, we want to emphasize the first 'except' command, specifi
 
 
 ### Testing and Bug-Fixing
+In the development of our application, we employed a series of testing tools and methodologies to ensure code quality and functionality. These included:
+
+**Mypy**: A static type checker for Python, used to detect type errors in our code, to ensure that the types of variables and returned values are correctly implemented.
+*Black*: An automatic code formatter for Python, making sure to adhere to a consistent style and format, essential for readability and maintainability.
+
+**Pylint**: A Python static code analysis tool, used to identify coding errors, enforce a coding standard, and look for code smells, which helped in maintaining high-quality code.
+
+**isort**: A Python library to sort imports alphabetically, and automatically separate them into sections. It made our import statements more organized and readable.
+
+**unittest**: The built-in Python unit testing framework was utilized to create and run tests on individual functions. Each module in our project has a corresponding "*_test.py" file within the "tests" folder in our repository, where we conducted the necessary testing of the functions contained in each module. However, it is important to note that tests did not include some functions linked to GUI commands or elements, as these were more effectively tested directly within the GUI environment.
+
+This testing approach ensured that our code was not only functional but also adhered to best practices in terms of style and structure.
+
+As far as bug-fixing is concerned, during the development process we encountered a significant challenge related to the variability in Amazon's page structure, which affected the correct functioning of our scraping functions. Specifically, our scraping functions as we initially implemented them were not able to consistently scrape the desired elements from the product pages, as Amazon's page layouts can vary greatly from product to product.
+
+To address this issue, we adopted an iterative and hands-on approach: initially, we tested our application with a wide range of products to identify where the scraping functions were failing. Afterwards, we accurately inspected the HTML structure of the problematic product pages. This way, we could understand how the coding patterns differed from our initial expectations.
+Based on the insights gained from these inspections, we adapted our scraping functions to be more versatile.
+
+This adaptation process was particularly challenging for functions like `scrape_amazon_product_description`: to cope with the diverse structures of Amazon product pages, we had to implement a series of conditional checks to identify different HTML elements that could contain the product description. The final function first attempts to find the description in one HTML structure, and if unsuccessful, it moves on to check for alternative structures. Each of these approaches contained within the function represents a different strategy for locating and extracting the product description, depending on the specific layout of the Amazon page.
 
 ## Collaboration and Teamwork
 
@@ -336,7 +355,7 @@ We identified the following sub-features with the corresponding person in charge
 
 12. **Testing** (team): Extensive testing of the code and the GUI. 
 
-13. **Code Improvement / Bug Fixing** (team): Using various tools (pylint, mypy, black) to improve the code and fix bugs.
+13. **Code Improvement / Bug Fixing** (team): Using various tools (Pylint, Mypy, Black, isort, unittest) to improve the code and fix bugs.
 
 ### Collaboration techniques
 
