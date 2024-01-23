@@ -147,6 +147,36 @@ The Tkinter code is framed with the command ```app.mainloop()``` which starts th
 # Start the main event loop
 app.mainloop()
 ```
+#### chatgpt_integration.py
+
+The module `chatgpt_integration.py` is providing the functions to interact with the Open AI API. After setting up an account with Open AI a personal access token will be generated that can be used to access the API `openai.api_key = "xx"`. The token is not stored in the script as we work with a public Git repository and we don't want to publish it. The token has to be added manually. In a more extensive project a shell script could be added to add on the key token that is stored locally. 
+
+``` python
+        # Insert the key for Open AI
+        openai.api_key = "xx"
+
+        # Accesses the API of Chat GPT to ask the question_to_chatgpt generated earlier
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an informative assistant."},
+                {"role": "user", "content": question_to_chatgpt},
+            ],
+            temperature=0.7,
+        )
+
+        # Save and return the generated content
+        generated_content = response["choices"][0]["message"]["content"]
+
+        return str(generated_content.strip())
+```
+
+When accessed, the API allows to generate an answer with the function `openai.ChatCompletion.create()`. The appropriate question to Chat GPT has been created earlier and stored in the variable `question_to_chatgpt`. 
+In general, we ask ChatGPT questions in a manner similar to how one would use the online tool. This has shown to generate the best responses. For the summary we ask "Summarize the negative and positive sentiment of the reviews attached. Limit to 6 bullet points. "
+
+With the message attribute we can specify how the answer should look like in general and that the content should be informative. The temperature attribute indicates on how "creative" the answer should be. We limited to 0.7 which indicates moderate randomness.  
+
+The answer can be accessed by `response["choices"][0]["message"]["content"]`. As Chat GPT generates several answers, with choice = 0 and message = content the content of the first answer is accessed and then returned after making sure that it is in string format. 
 
 
 ### Testing and bug-fixing
