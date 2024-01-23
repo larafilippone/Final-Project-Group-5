@@ -66,6 +66,10 @@ In the following, we will walk through the main scripts described above and expl
 
 The `main.py` script serves as the entry point of the application. Its primary functions include generating the Graphical User Interface (GUI) and managing the interaction among different features.
 
+The script begins by importing essential packages needed in later stages, such as `WordCloud` and `matplotlib`. Within the project's virtual environment, these packages must be installed using pip install. All the requirements are listed in the requirements.txt file.
+
+In addition to the public packages, this section of the code imports custom functions created for the project, such as `scrape_data` and `ask_chatgpt`. These functions are organized into modules containing functions with similar functionality. This approach enhances code readability and promotes code reuse.
+
 ```
 ...
 from wordcloud import WordCloud
@@ -78,18 +82,14 @@ from data_analysis import get_polarity_color, generate_filtered_text
 from scraping_utils import get_amazon_product_data, scrape_amazon_product_description, scrape_data
 ...
 ```
-
-The script begins by importing essential packages needed in later stages, such as `WordCloud` and `matplotlib`. Within the project's virtual environment, these packages must be installed using pip install. All the requirements are listed in the requirements.txt file.
-
-In addition to the public packages, this section of the code imports custom functions created for the project, such as `scrape_data` and `ask_chatgpt`. These functions are organized into modules containing functions with similar functionality. This approach enhances code readability and promotes code reuse.
+The graphical user interface is initialized in the main script by using the Tkinter library. `app = tk.Tk()` creates the window that can later be populated with different widgets. The window size is dynamically adapted to the size of the computer screen. 
 
 ``` python 
 # Initialize the main application window using Tkinter
 app = tk.Tk()
 app.title("Amazon Review Analyzer")
 ```
-
-The graphical user interface is initialized in the main script by using the Tkinter library. `app = tk.Tk()` creates the window that can later be populated with different widgets. The window size is dynamically adapted to the size of the computer screen. 
+To achieve a well-organized layout, the window was divided into two separate frames. These frames serve as invisible containers for placing widgets, and a row-and-column grid system was employed for precise widget placement within these frames.
  
  ``` python
  # Create frames for the left and right sides
@@ -97,9 +97,7 @@ left_frame = tk.Frame(app, borderwidth=0, relief="flat")
 right_frame = tk.Frame(app, borderwidth=0, relief="flat")
 ```
 
-To achieve a well-organized layout, the window was divided into two separate frames. These frames serve as invisible containers for placing widgets, and a row-and-column grid system was employed for precise widget placement within these frames.
-
-Exemplary, below you can find the placement of a button to start the scraping process for reviews:
+Exemplary, below you can find the placement of a button widget to start the search process and update the treeview (table) widget. 
 
 ``` python
 # Create button to start the search
@@ -130,7 +128,7 @@ def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
         for i, row in product_df.iterrows():
             products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["ASIN"]))
 ```
-This function again enters the values receives from the function `get_amazon_product_data` into the Dataframe `product_df`and updates the treeview widget with the same data and the command `products_tree.insert`.
+This function again enters the values received from the function `get_amazon_product_data` into the Dataframe `product_df`and updates the treeview widget with the same data and the command `products_tree.insert`.
 
 Similarily other widgets are linked to imported functions that execute scraping processes or for example access the Chat GPT API. 
 
@@ -142,6 +140,14 @@ Thus the button for scrapping, on selection executes the following functions con
 - `display_chatgpt(all_results)` connects to chat_gpt and displays results in two text fields 
 
 Thus the GUI is build up in the main script, retrieving information from the user like the product searched and on selection of buttons or lists is executing functions of imported modules. These functions again are executing scraping processes, further processing the data or displaying information. 
+
+The Tkinter code is framed with the command ```app.mainloop()``` which starts the main event loop of the Tkinter application. This loop listens for events such as button clicks, product selection, etc., and it keeps the application running. It is placed at the end of the Tkinter script, after we have defined all our GUI components. 
+
+```
+# Start the main event loop
+app.mainloop()
+```
+
 
 ### Testing and bug-fixing
 
