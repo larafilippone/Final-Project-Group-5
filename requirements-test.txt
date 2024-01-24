@@ -1,6 +1,5 @@
 # This requirements are for development and testing only
-pytest
-black
-isort
-mypy
-pylint
+black              23.12.1
+isort              5.13.2
+mypy               1.8.0
+pylint             3.0.3
