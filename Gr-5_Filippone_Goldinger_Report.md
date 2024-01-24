@@ -387,5 +387,13 @@ The GUI also includes explanatory notes on polarity and subjectivity scores, cle
 
 ## Conclusion
 
+In conclusion, our collaborative efforts have resulted in the successful development of the **Amazon Review Analyzer** application, covering key features such as web scraping, automated sentiment analysis, and the generation of insightful summaries and improvement suggestions based on customer reviews. This application could be a valuable tool for users seeking to effectively organize and structure the vast data available on platforms like Amazon, extracting valuable insights from it.
+
+Throughout this project, we not only achieved our technical objectives but also gained important learnings from the development process. It was a crucial learning outcome in understanding how to work together, manage different aspects of the project, and seamlessly integrate everything into one product. For us the experience highlighted the importance of teamwork and effective communication. We also learned on how to use tools like GitHub to help us achieve this. 
+
+Our exploration of techniques, including complex web scraping and the integration of tools through APIs, has also broadened our understanding of practical applications of these technologies.
+
+The acquired knowledge and skills hopefully lay the groundwork for future projects, where we can delve deeper into these techniques and explore additional real-world applications. We can think about numerous potential projects where we could deepen our knowledge and apply these skills.
+
 ## References
 J. James, "amazon_review_scraper.py", (2019), GitHub gist. https://gist.github.com/jrjames83/4653d488801be6f0683b91eda8eeb627
