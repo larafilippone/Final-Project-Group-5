@@ -387,7 +387,7 @@ The GUI also includes explanatory notes on polarity and subjectivity scores, cle
 
 ## Conclusion
 
-In conclusion, our collaborative efforts have resulted in the successful development of the **Amazon Review Analyzer** application, covering the defined key features such as web scraping, automated sentiment analysis, and the generation of insightful summaries and improvement suggestions based on customer reviews. 
+In conclusion, our efforts have resulted in the successful development of the **Amazon Review Analyzer** application, covering the defined key features such as web scraping, automated sentiment analysis, and the generation of insightful summaries and improvement suggestions based on customer reviews. 
 
 Throughout this project, we not only achieved our technical objectives but also gained important learnings from the development process. It was a crucial learning outcome in understanding how to work together, manage different aspects of the project, and seamlessly integrate everything into one product. This involved thorough testing, improving the tool, and bug fixing. For us the experience highlighted the importance of teamwork and effective communication. We also learned on how to use tools like GitHub to help us achieve this. 
 
