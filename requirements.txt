@@ -4,6 +4,9 @@
 # You can install Microsoft Visual C++ Build Tools from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 # Install Rust by following the instructions at: https://www.rust-lang.org/tools/install
 
+# Python Version
+# This project is developed with Python 3.11.5
+
 # Python Dependencies
 aiohttp            3.9.1
 aiosignal          1.3.1
