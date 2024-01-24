@@ -400,4 +400,20 @@ We are happy with the outcomes, learning new skills and successfully achieving t
 
 
 ## References
-J. James, "amazon_review_scraper.py", (2019), GitHub gist. https://gist.github.com/jrjames83/4653d488801be6f0683b91eda8eeb627
+Jeff James. (2019). "amazon_review_scraper.py". GitHub gist. https://gist.github.com/jrjames83/4653d488801be6f0683b91eda8eeb627
+
+Leonard Richardson. (2023). Beautiful Soup Documentation. https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+Python Software Foundation. (2023). Tkinter — Python interface to Tcl/Tk. https://docs.python.org/3/library/tkinter.html
+
+Python Software Foundation. (2023). unittest — Unit testing framework. https://docs.python.org/3/library/unittest.html
+
+Steven Loria and Contributors. (2023). TextBlob: Simplified Text Processing. https://textblob.readthedocs.io/
+
+The Black Contributors. (2023). Black: The uncompromising code formatter. https://black.readthedocs.io/en/stable/
+
+The isort Contributors. (2023). isort: A Python utility/library to sort imports. https://pycqa.github.io/isort/
+
+The Mypy Contributors. (2023). Mypy: Optional Static Typing for Python. https://mypy.readthedocs.io/
+
+The Pylint Contributors. (2023). Pylint - code analysis for Python. https://pylint.pycqa.org/
