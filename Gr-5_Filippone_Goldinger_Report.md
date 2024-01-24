@@ -387,13 +387,17 @@ The GUI also includes explanatory notes on polarity and subjectivity scores, cle
 
 ## Conclusion
 
-In conclusion, our collaborative efforts have resulted in the successful development of the **Amazon Review Analyzer** application, covering the defined key features such as web scraping, automated sentiment analysis, and the generation of insightful summaries and improvement suggestions based on customer reviews. Such tool can help users better organize and make sense of the extensive data on platforms like Amazon, extracting valuable insights.
+In conclusion, our collaborative efforts have resulted in the successful development of the **Amazon Review Analyzer** application, covering the defined key features such as web scraping, automated sentiment analysis, and the generation of insightful summaries and improvement suggestions based on customer reviews. 
 
 Throughout this project, we not only achieved our technical objectives but also gained important learnings from the development process. It was a crucial learning outcome in understanding how to work together, manage different aspects of the project, and seamlessly integrate everything into one product. This involved thorough testing, improving the tool, and bug fixing. For us the experience highlighted the importance of teamwork and effective communication. We also learned on how to use tools like GitHub to help us achieve this. 
 
 Our exploration of techniques, including complex web scraping and the integration of tools through APIs, has also broadened our understanding of practical applications of these technologies.
 
-The acquired knowledge and skills hopefully lay the groundwork for future projects, where we can delve deeper into these techniques and explore additional real-world applications. We can think about numerous potential projects where we could deepen our knowledge and apply these skills.
+The acquired knowledge and skills hopefully lay the groundwork for future projects, where we can delve deeper into these techniques and explore additional real-world applications. We can think about numerous potential projects where we could deepen our knowledge and apply these capabilities. 
+
+We are happy with the outcomes, learning new skills and successfully achieving the goals we initially set.
+
+
 
 ## References
 J. James, "amazon_review_scraper.py", (2019), GitHub gist. https://gist.github.com/jrjames83/4653d488801be6f0683b91eda8eeb627
