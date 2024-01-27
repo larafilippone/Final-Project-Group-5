@@ -1,15 +1,21 @@
-# Python Package Template
+# Amazon Review Analyzer
+The Amazon Review Analyzer is a tool designed to automate the analysis of extensive Amazon product reviews, providing crucial insights into customer sentiments, experiences, and preferences. This enables informed decision-making and product enhancements for customer service, product managers, and Amazon sellers.
+## Structure of the Repository
+The repository is organized into several folders:
+- **Amazon Review Analyzer**: the main folder containing all the modules used for the development of the application.
 
-This is a template for the Python project in the course _Introduction to Computer Science and Programming_ at the University of Lucerne.
+- **tests**: this folder contains scripts used for unit testing for each of the individual modules.
 
-## Prepare Repository
-1. Rename all instances of `"project_name"`
-2. Create virtual environment: `python -m venv venv`
-3. Install requirements and requirements-test:
-	- `pip install -r requirements-test.txt -r requirements.txt`
-4. Test development tools `mypy`, `pylint`, `black`
-5. Run tests `pytest tests/test_cli.py`
-6. Run project
-    - `python -m project_name` or
-	- `python project_name/__main__.py`
-		- `__main__.py` is the entry point
+- **documentation**: this folder contains a detailed report of the project and the PowerPoint presentation shown in class.
+
+- **requirements**: this folder contains the requirements to run the application and for testing.
+
+## How to Use the Repository
+
+1. Clone the repository.
+
+2. Install required libraries from requirements.txt.
+
+3. Run main.py to launch the application.
+
+4. Explore the functionalities through the GUI.
