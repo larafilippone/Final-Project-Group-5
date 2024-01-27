@@ -307,6 +307,7 @@ In the case of ChatGPT, we want to emphasize the first 'except' command, specifi
 In the development of our application, we employed a series of testing tools and methodologies to ensure code quality and functionality. These included:
 
 **Mypy**: a static type checker for Python, used to detect type errors in our code, to ensure that the types of variables and returned values are correctly implemented.
+
 **Black**: an automatic code formatter for Python, making sure to adhere to a consistent style and format, essential for readability and maintainability.
 
 **Pylint**: a Python static code analysis tool, used to identify coding errors, enforce a coding standard, and look for code smells, which helped in maintaining high-quality code.
