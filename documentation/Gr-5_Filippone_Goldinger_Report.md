@@ -9,7 +9,7 @@ Lara Filippone, Florian Goldinger
 ## Introduction
 In the ever-evolving domain of e-commerce, customer experience and feedback have become more and more significant. Recognizing the central role of these dimensions for businesses, our project aimed to explore the potential of modern technology to optimize and innovate the processing of customer opinions. Specifically, we focused on Amazon product reviews, a rich source of consumer insights, although generally difficult to fully explore due to its great volume and unstructured nature.
 
-The primary objective of this project was the development of the Amazon Review Analyzer, an analytical tool tailored for customer service, product managers and Amazon sellers in general. Our proposal is designed to facilitate and automate the analysis of extensive textual data from Amazon product reviews. By doing so, it empowers these stakeholders to gain instant insights on customer sentiments, experiences, and preferences, leading to informed decision-making and product enhancements.
+The primary objective of this project was the development of the Amazon Review Analyzer, an analytical tool tailored for customer service, product managers and Amazon sellers in general. Our proposal is designed to facilitate and automate the analysis of extensive textual data from product reviews. By doing so, it provides these stakeholders with instant insights on customer sentiments, experiences, and preferences, leading to informed decision-making and product enhancements.
 
 To achieve this, we outlined the following key functionalities for our application:
 
@@ -25,8 +25,7 @@ To achieve this, we outlined the following key functionalities for our applicati
 
 **User-friendly GUI**: to ensure accessibility and ease of use, said functionalities are condensed within an intuitive and user-friendly Graphical User Interface (GUI) and accompanied by meaningful and evocative visualizations.
 
-The expected outcome of this project was the implementation of a tool that showcases the potential of integrating various functionalities into a single platform. Although our tool is a preliminary and simple version, it is thought as a proposal for how such a system could be developed and utilized in a real-world scenario. By demonstrating the feasibility and effectiveness of combining web scraping, sentiment analysis, keyword identification, and generative AI technologies for the analysis of Amazon product reviews, this project offers insights into the practical applications of these technologies in e-commerce and customer feedback analysis.
-
+The expected outcome of this project was the implementation of a tool that showcases the potential of integrating various functionalities into a single platform. Although our tool is a preliminary and simple version, it is thought as a proposal for how such a system could be developed and utilized in a real-world scenario. By demonstrating the feasibility and effectiveness of combining web scraping, sentiment analysis, keyword identification, and generative AI for the analysis of product reviews, this project offers insights into the practical applications of these technologies in e-commerce and customer feedback analysis.
 ## Code Quality and Functionality
 
 ### Code Overview
@@ -60,11 +59,11 @@ Our project's codebase was divided into multiple scripts to ensure readability, 
 
 ### Code functionality and quality
 
-In the following, we will walk through the main scripts described above and explain important code snippets. This section covers only the key code segments. Further details can be obtained in the scripts where everything has been commented out in detail. Docstrings are added to all of the functions to explain the purpose of the function, the arguments and what is returned. 
+In the following, we will walk through the main scripts described above and explain important code snippets. This section covers only the key code segments. Further details can be obtained in the scripts where everything has been commented out in detail. Docstrings were added to all of the functions to explain the purpose of the function, the arguments and what is returned. 
 
 #### main.py
 
-The `main.py` script serves as the entry point of the application. Its primary functions include generating the Graphical User Interface (GUI) and managing the interaction among different features.
+The `main.py` script serves as the entry point of the application. Its primary functions include generating the GUI and managing the interaction among different features.
 
 The script begins by importing essential packages needed in later stages, such as `WordCloud` and `matplotlib`. Within the project's virtual environment, these packages must be installed using pip install. All the requirements are listed in the requirements.txt file.
 
@@ -82,7 +81,7 @@ from data_analysis import get_polarity_color, generate_filtered_text
 from scraping_utils import get_amazon_product_data, scrape_amazon_product_description, scrape_data
 ...
 ```
-The graphical user interface is initialized in the main script by using the Tkinter library. `app = tk.Tk()` creates the window that can later be populated with different widgets. The window size is dynamically adapted to the size of the computer screen. 
+The graphical user interface is initialized in the main script by using the Tkinter library. The code snippet `app = tk.Tk()` creates the window that can later be populated with different widgets. The window size is dynamically adapted to the size of the computer screen. 
 
 ``` python 
 # Initialize the main application window using Tkinter
@@ -110,7 +109,7 @@ search_button = tk.Button(
 )
 search_button.grid(row=3, column=0, columnspan=2, padx=300, pady=20, sticky="w")
 ```
-The button is positioned within the links_frame using the grid layout. The parameters in the grid method determine the row, column, and the padding (distance) with respect to the x and y axes. With the command attribute, the function starting the scraping process `update_treeview` is linked to the button and executed when the user clicks on it. The `update_treeeview` function takes on the values entered into the keyword, search_param and num_pages field as attributes. 
+The button is positioned within the `left_frame` using the grid layout. The parameters in the grid method determine the row, column, and the padding (distance) with respect to the x and y axes. With the command attribute, the function starting the scraping process `update_treeview` is linked to the button and executed when the user clicks on it. The `update_treeeview` function takes on the values entered into the keyword, `search_param` and `num_pages` field as attributes. 
 
 Thus a click starts this function: 
 
@@ -128,18 +127,18 @@ def update_treeview(keyword: str, search_param: str, num_pages: int) -> None:
         for i, row in product_df.iterrows():
             products_tree.insert("", "end", values=(i + 1, row["Product Name"], row["ASIN"]))
 ```
-This function again enters the values received from the function `get_amazon_product_data` into the Dataframe `product_df`and updates the treeview widget with the same data and the command `products_tree.insert`.
+This function again enters the values received from the function `get_amazon_product_data` into the Dataframe `product_df` and updates the treeview widget with the same data and the command `products_tree.insert`.
 
-Similarily other widgets are linked to imported functions that execute scraping processes or for example access the Chat GPT API. 
+Similarily, other widgets are linked to imported functions that execute scraping processes or for example access the ChatGPT API. 
 
 Thus the button for scraping, on selection executes the following functions consecutively: 
 
-- `scrape_data(product_id, num_review_pages)` scrapes all the reviews of a specific product_id
+- `scrape_data(product_id, num_review_pages)` scrapes all the reviews of a specific product ID
 - `display_review(review)` displays the reviews in a text field 
-- `display_average_polarity_and_color()` displays the average polarity in a graphic (red, orange, green)
+- `display_average_polarity_and_color()` displays the average polarity and a corresponding colored circle (red, orange, green)
 - `display_chatgpt(all_results)` connects to ChatGPT and displays results in two text fields 
 
-Thus the GUI is built up in the main script, retrieving information from the user like the product searched and on selection of buttons or lists is executing functions of imported modules. These functions again are executing scraping processes, further processing the data or displaying information.
+Thus the GUI is built up in the main script, retrieving information from the user like the product searched and on selection of buttons or lists, executing functions of imported modules. These functions again are executing scraping processes, further processing the data or displaying information.
 
 The Tkinter code is framed with the command ```app.mainloop()``` which starts the main event loop of the Tkinter application. This loop listens for events such as button clicks, product selection, etc., and it keeps the application running. It is placed at the end of the Tkinter script, after we have defined all our GUI components. 
 
@@ -189,7 +188,7 @@ def get_reviews_from_html(page_html: str) -> list:
 ```
 The function uses BeautifulSoup's parsing functionalities to locate review elements, first trying to find them by a specific 'data-hook' attribute and then by a class name. This dual approach ensures that the detection works for every product, considering the variability in Amazon’s page structure.
 
-The `get_review_text function` is an example of how specific pieces of information are extracted from each review. Similar functions are used for retrieving other parts of a review, namely the title, the date and the rating.
+The `get_review_text` function is an example of how specific pieces of information are extracted from each review. Similar functions are used for retrieving other parts of a review, namely the title, the date and the rating.
 ``` python
 # Create a function to retrieve the review text
 def get_review_text(soup_object: BeautifulSoup) -> str:
@@ -254,7 +253,7 @@ The function creates a concatenated string of all important words from the revie
 
 #### chatgpt_integration.py
 
-The module `chatgpt_integration.py` is providing the functions to interact with the OpenAI API. After setting up an account with OpenAI a personal access token will be generated that can be used to access the API `openai.api_key = "xx"`. The token is not stored in the script as we work with a public Git repository and we don't want to publish it. The token has to be added manually. In a more extensive project a shell script could be included to add on the key token that is stored locally. 
+The module `chatgpt_integration.py` is providing the functions to interact with the OpenAI API. After setting up an account with OpenAI, a personal access token will be generated that can be used to access the API `openai.api_key = "xx"`. The token is not stored in the script as we work with a public Git repository and we don't want to publish it. The token has to be added manually. In a more extensive project a shell script could be included to add on the key token that is stored locally. 
 
 ``` python
         # Insert the key for Open AI
@@ -279,13 +278,13 @@ The module `chatgpt_integration.py` is providing the functions to interact with 
 When accessed, the API allows to generate an answer with the function `openai.ChatCompletion.create()`. The appropriate question to ChatGPT has been created earlier and stored in the variable `question_to_chatgpt`. 
 In general, we ask ChatGPT questions in a manner similar to how one would use the online tool. This has shown to generate the best responses. For the summary we ask "Summarize the negative and positive sentiment of the reviews attached. Limit to 6 bullet points."
 
-With the message attribute we can specify how the answer should look like in general and that the content should be informative. The temperature attribute indicates on how "creative" the answer should be. We limited to 0.7 which indicates moderate randomness.  
+With the message attribute we can specify what the answer should look like in general and that the content should be informative. The temperature attribute indicates on how "creative" the answer should be. We limited to 0.7 which indicates moderate randomness.  
 
 The answer can be accessed by `response["choices"][0]["message"]["content"]`. As ChatGPT generates several answers, with choice = 0 and message = content, the content of the first answer is accessed and then returned after making sure that it is in string format. 
 
 *Error Handling*
 
-As to all the scripts where we interact with a web server or with an API we have added on error handling. Because in such situations we might face runtime errors. As such we can detect them and inform accordingly.
+All the scripts where we interact with a web server or with an API contain error handling strategies, because in such situations we might face runtime errors. As such we can detect them and inform accordingly.
 
 ``` python
 try:
@@ -307,12 +306,12 @@ In the case of ChatGPT, we want to emphasize the first 'except' command, specifi
 ### Testing and Bug-Fixing
 In the development of our application, we employed a series of testing tools and methodologies to ensure code quality and functionality. These included:
 
-**Mypy**: A static type checker for Python, used to detect type errors in our code, to ensure that the types of variables and returned values are correctly implemented.
-*Black*: An automatic code formatter for Python, making sure to adhere to a consistent style and format, essential for readability and maintainability.
+**Mypy**: a static type checker for Python, used to detect type errors in our code, to ensure that the types of variables and returned values are correctly implemented.
+**Black**: an automatic code formatter for Python, making sure to adhere to a consistent style and format, essential for readability and maintainability.
 
-**Pylint**: A Python static code analysis tool, used to identify coding errors, enforce a coding standard, and look for code smells, which helped in maintaining high-quality code.
+**Pylint**: a Python static code analysis tool, used to identify coding errors, enforce a coding standard, and look for code smells, which helped in maintaining high-quality code.
 
-**isort**: A Python library to sort imports alphabetically, and automatically separate them into sections. It made our import statements more organized and readable.
+**isort**: a Python library to sort imports alphabetically, and automatically separate them into sections. It made our import statements more organized and readable.
 
 **unittest**: The built-in Python unit testing framework was utilized to create and run tests on individual functions. Each module in our project has a corresponding "*_test.py" file within the "tests" folder in our repository, where we conducted the necessary testing of the functions contained in each module. However, it is important to note that tests did not include some functions linked to GUI commands or elements, as these were more effectively tested directly within the GUI environment.
 
@@ -331,31 +330,31 @@ We decided to split our tool into distinct features, allowing each team member t
 
 We identified the following sub-features with the corresponding person in charge:
 
-1. **Amazon Search Feature** (Florian): Replicating the search functionality as known from the Amazon homepage. This involved analyzing the functioning of the Amazon search, examining the HTML code of the landing pages, developing scraping techniques, extracting ASIN for other features, and displaying the results in the GUI.
+1. **Amazon Search Feature** (Florian): replicating the search functionality as known from the Amazon homepage. This involved analyzing the functioning of the Amazon search, examining the HTML code of the landing pages, developing scraping techniques, extracting ASIN for other features, and displaying the results in the GUI.
 
-2. **Product Description** (Florian): Following the product search, upon selecting a product, the product description should be shown. Again, Amazon landing pages are diverse, requiring different scraping approaches for the various versions and associated HTML source code.
+2. **Product Description** (Florian): following the product search, upon selecting a product, the product description should be shown. Again, Amazon landing pages are diverse, requiring different scraping approaches for the various versions and associated HTML source code.
 
-3. **Scraping Amazon Reviews** (Lara): Developing different scraping versions based on the HTML source code, which varies across different product pages.
+3. **Scraping Amazon Reviews** (Lara): developing different scraping versions based on the HTML source code, which varies across different product pages.
 
-4. **Sentiment Analysis** (Lara): Deploying sentiment analysis on the reviews, displaying both subjectivity and polarity scores.
+4. **Sentiment Analysis** (Lara): deploying sentiment analysis on the reviews, displaying both subjectivity and polarity scores.
 
-5. **Filter Feature** (Lara): Enhancing the display of sentiment results by introducing a filter based on subjectivity and polarity.
+5. **Filter Feature** (Lara): enhancing the display of sentiment results by introducing a filter based on subjectivity and polarity.
 
-6. **Graphical Display of Sentiment** (Lara): Introducing a graphical display (red, orange, green) based on the average sentiment score.
+6. **Graphical Display of Sentiment** (Lara): introducing a graphical display (red, orange, green) based on the average sentiment score.
 
-7. **Chat GPT API** (Florian): Connecting the tool with Chat GPT, developing the correct connection through the API.
+7. **Chat GPT API** (Florian): connecting the tool with ChatGPT, developing the correct connection through the API.
 
-8. **Product Summary / Improvement** (Florian): Gathering and displaying the product summary and improvement suggestions using the Chat GPT API.
+8. **Product Summary / Improvement** (Florian): gathering and displaying the product summary and improvement suggestions using the ChatGPT API.
 
-9. **Graphical Wordcloud** (Lara): Implementing a word cloud display that summarizes key words in the reviews. Stop words had to be filtered out to obtain an appropriate result.
+9. **Graphical Wordcloud** (Lara): implementing a word cloud display that summarizes key words in the reviews. Stop words had to be filtered out to obtain an appropriate result.
 
-10. **Integration of Features** (team): Integrating all features into a seamless, logical process and into one main script.
+10. **Integration of Features** (team): integrating all features into a seamless, logical process and into one main script.
 
-11. **Graphical User Interface** (team): Developing a user-friendly and intuitive interface to easily use the tool and display all relevant results in a summarized way.
+11. **Graphical User Interface** (team): developing a user-friendly and intuitive interface to easily use the tool and display all relevant results in a summarized way.
 
-12. **Testing** (team): Extensive testing of the code and the GUI. 
+12. **Testing** (team): extensive testing of the code and the GUI. 
 
-13. **Code Improvement / Bug Fixing** (team): Using various tools (Pylint, Mypy, Black, isort, unittest) to improve the code and fix bugs.
+13. **Code Improvement / Bug Fixing** (team): using various tools (Pylint, Mypy, Black, isort, unittest) to improve the code and fix bugs.
 
 ### Collaboration techniques
 
@@ -378,7 +377,7 @@ The integration with ChatGPT represents another innovative aspect, as it enables
 
 Our application includes creative solutions as well, like the generation of word clouds from review keywords. This functionality creates an engaging visual representation of the most discussed topics, and besides adding a visual appeal it can also serve a practical purpose in presentations, making the data both impactful and straightforward.
 
-Moreover, we make use of color coding to represent the average sentiment polarity of the reviews: green for positive, orange for neutral, and red for negative sentiments. This intuitive use of colors creates an immediate, evocative understanding of the overall sentiment, enhancing the impact and interpretability of the data.
+Moreover, the app uses color coding to represent the average sentiment polarity of the reviews: green for positive, orange for neutral, and red for negative sentiments. This intuitive use of colors creates an immediate, evocative understanding of the overall sentiment, enhancing the impact and interpretability of the data.
 
 ### User Experience
 As far as user experience is concerned, our tool is designed to be user-friendly and accessible: despite the complexity of the underlying Python code, users can directly interact with a simple and intuitive GUI. Precisely, the interface mimics the familiar experience of browsing the Amazon website, allowing users to input a product name, keyword, or ASIN to receive a list of results in a straightforward format.
